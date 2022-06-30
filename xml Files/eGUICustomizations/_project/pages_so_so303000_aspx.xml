@@ -36,6 +36,13 @@
                             </PXSelector>
                         </AddItem>
                         <AddItem>
+                            <PXTextEdit TypeFullName="PX.Web.UI.PXTextEdit">
+                                <Prop Key="Virtual:ApplyStylesheetSkin" />
+                                <Prop Key="ID" Value="CstPXTextEdit56" />
+                                <Prop Key="DataField" Value="UsrGUITitle" />
+                            </PXTextEdit>
+                        </AddItem>
+                        <AddItem>
                             <PXLayoutRule TypeFullName="PX.Web.UI.PXLayoutRule">
                                 <Prop Key="Virtual:ApplyStylesheetSkin" />
                                 <Prop Key="ID" Value="CstPXLayoutRule15" />
@@ -64,13 +71,6 @@
                                 <Prop Key="Virtual:ApplyStylesheetSkin" />
                                 <Prop Key="ID" Value="CstPXTextEdit20" />
                                 <Prop Key="DataField" Value="UsrOurTaxNbr" />
-                            </PXTextEdit>
-                        </AddItem>
-                        <AddItem>
-                            <PXTextEdit TypeFullName="PX.Web.UI.PXTextEdit">
-                                <Prop Key="Virtual:ApplyStylesheetSkin" />
-                                <Prop Key="ID" Value="CstPXTextEdit56" />
-                                <Prop Key="DataField" Value="UsrGUITitle" />
                             </PXTextEdit>
                         </AddItem>
                         <AddItem>
@@ -196,11 +196,11 @@
                             </PXCheckBox>
                         </AddItem>
                         <AddItem>
-                            <PXTextEdit TypeFullName="PX.Web.UI.PXTextEdit">
+                            <PXSelector TypeFullName="PX.Web.UI.PXSelector">
                                 <Prop Key="Virtual:ApplyStylesheetSkin" />
-                                <Prop Key="ID" Value="CstPXTextEdit57" />
+                                <Prop Key="ID" Value="CstPXSelector57" />
                                 <Prop Key="DataField" Value="UsrGUISummary" />
-                            </PXTextEdit>
+                            </PXSelector>
                         </AddItem>
                     </Children>
                 </PXTabItem>

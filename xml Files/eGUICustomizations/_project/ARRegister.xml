@@ -1,13 +1,13 @@
 ﻿<Table TableName="ARRegister">
     <Column TableName="ARRegister" ColumnName="UsrTaxNbr" ColumnType="string" AllowNull="True" MaxLength="8" DecimalPrecision="2" DecimalLength="8" IsNewColumn="True" IsUnicode="True" />
     <Column TableName="ARRegister" ColumnName="UsrOurTaxNbr" ColumnType="string" AllowNull="True" MaxLength="8" DecimalPrecision="2" DecimalLength="8" IsNewColumn="True" IsUnicode="True" />
+    <Column TableName="ARRegister" ColumnName="UsrGUINbr" ColumnType="string" AllowNull="True" MaxLength="1000" DecimalPrecision="2" DecimalLength="15" IsNewColumn="True" IsUnicode="True" />
     <Column TableName="ARRegister" ColumnName="UsrGUIDate" ColumnType="date" AllowNull="True" MaxLength="25" DecimalPrecision="2" IsNewColumn="True" IsUnicode="True" />
     <Column TableName="ARRegister" ColumnName="UsrVATOutCode" ColumnType="string" AllowNull="True" MaxLength="2" DecimalPrecision="2" DecimalLength="2" IsNewColumn="True" IsUnicode="True" />
     <Column TableName="ARRegister" ColumnName="UsrB2CType" ColumnType="string" AllowNull="True" MaxLength="3" DecimalPrecision="2" DecimalLength="3" IsNewColumn="True" IsUnicode="True" />
     <Column TableName="ARRegister" ColumnName="UsrCarrierID" ColumnType="string" AllowNull="True" MaxLength="64" DecimalPrecision="2" DecimalLength="64" IsNewColumn="True" IsUnicode="True" />
     <Column TableName="ARRegister" ColumnName="UsrNPONbr" ColumnType="string" AllowNull="True" MaxLength="10" DecimalPrecision="2" DecimalLength="10" IsNewColumn="True" IsUnicode="True" />
     <Column TableName="ARRegister" ColumnName="UsrCreditAction" ColumnType="string" AllowNull="True" MaxLength="10" DecimalPrecision="0" DecimalLength="0" IsNewColumn="True" IsUnicode="True" />
-    <Column TableName="ARRegister" ColumnName="UsrGUINbr" ColumnType="string" AllowNull="True" MaxLength="15" DecimalPrecision="2" DecimalLength="15" IsNewColumn="True" IsUnicode="True" />
     <Column TableName="ARRegister" ColumnName="UsrGUITitle" ColumnType="string" AllowNull="True" MaxLength="80" DecimalPrecision="0" DecimalLength="0" IsNewColumn="True" IsUnicode="True" />
     <Column TableName="ARRegister" ColumnName="UsrVATType" ColumnType="string" AllowNull="True" MaxLength="2" DecimalPrecision="0" DecimalLength="0" IsNewColumn="True" IsUnicode="True" />
     <Column TableName="ARRegister" ColumnName="UsrSummaryPrint" ColumnType="bool" AllowNull="True" DecimalPrecision="0" DecimalLength="0" IsNewColumn="True" IsUnicode="True" />
