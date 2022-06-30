@@ -1,0 +1,35 @@
+﻿<Sql TableName="TWNGUIInvCredit" TableSchemaXml="#CDATA">
+    <CDATA name="TableSchemaXml"><![CDATA[<table name="TWNGUIInvCredit">
+  <col name="CompanyID" type="Int" default="Zero" />
+  <col name="RequestID" type="NVarChar(15)" />
+  <col name="CustomerID" type="Int" nullable="true" />
+  <col name="GUINbr" type="NVarChar(15)" nullable="true" />
+  <col name="VATOutCode" type="NChar(2)" nullable="true" />
+  <col name="GUINetAmt" type="Decimal(18,0)" nullable="true" />
+  <col name="GUITaxAmt" type="Decimal(10,0)" nullable="true" />
+  <col name="CNGUINbr" type="NVarChar(1000)" nullable="true" />
+  <col name="CNVATOutCode" type="NChar(2)" nullable="true" />
+  <col name="CNNetAmt" type="Decimal(18,0)" nullable="true" />
+  <col name="CNTaxAmt" type="Decimal(10,0)" nullable="true" />
+  <col name="NewGUINbr" type="NVarChar(15)" nullable="true" />
+  <col name="NewGUIDate" type="SmallDateTime" />
+  <col name="CalcNetAmt" type="Decimal(18,0)" nullable="true" />
+  <col name="CalcTaxAmt" type="Decimal(10,0)" nullable="true" />
+  <col name="CreatedByID" type="UniqueIdentifier" />
+  <col name="CreatedByScreenID" type="Char(8)" />
+  <col name="CreatedDateTime" type="DateTime" />
+  <col name="LastModifiedByID" type="UniqueIdentifier" />
+  <col name="LastModifiedByScreenID" type="Char(8)" />
+  <col name="LastModifiedDateTime" type="DateTime" />
+  <col name="NoteID" type="UniqueIdentifier" nullable="true" />
+  <col name="tstamp" type="Timestamp" />
+  <index name="PK_TWNGUIInvCredit_1" clustered="true" primary="true" unique="true">
+    <col name="CompanyID" />
+    <col name="RequestID" />
+  </index>
+  <index name="TWNGUIInvCredit_NoteID" unique="true">
+    <col name="NoteID" />
+    <col name="CompanyID" />
+  </index>
+</table>]]></CDATA>
+</Sql>
