@@ -122,7 +122,7 @@ namespace PX.Objects.AR
 
                             Customer customer = Customer.PK.Find(Base, doc.CustomerID);
 
-                            Tuple<string, string, string> tuple = GetB2CTypeValue(string.IsNullOrEmpty(docExt.UsrTaxNbr), docExt.UsrCarrierID, docExt.UsrNPONbr);
+                            Tuple<string, string, string> tuple = GetB2CTypeValue(!string.IsNullOrEmpty(docExt.UsrTaxNbr), docExt.UsrCarrierID, docExt.UsrNPONbr);
 
                             rp.CreateGUITrans(new STWNGUITran()
                             {
