@@ -95,10 +95,10 @@ namespace eGUICustomizations.Graph
                     // 買受人公司名稱
                     lines += gUITrans.GUITitle + verticalBar;
                     // 會員編號
-                    (string phone, string email) = graph.GetBillingInfo(graph, gUITrans.DocType, gUITrans.OrderNbr, gUITrans.CustVend);
+                    (string phone, string email, string attention) = graph.GetBillingInfo(graph, gUITrans.DocType, gUITrans.OrderNbr, gUITrans.CustVend);
                     lines += graph.GetMemberNbr(graph, register?.CustomerID, new string[] { gUITrans.CustVend, phone }) + verticalBar;
                     // 會員姓名
-                    lines += gUITrans.GUITitle + verticalBar;
+                    lines += string.IsNullOrEmpty(gUITrans.TaxNbr) ? attention : gUITrans.GUITitle + verticalBar;
                     // 會員郵遞區號
                     lines += verticalBar;
                     // 會員地址
@@ -211,7 +211,7 @@ namespace eGUICustomizations.Graph
                         // 商品條碼
                         lines += new string(char.Parse(verticalBar), 2);
                         // 商品名稱
-                        lines += (regisExt.UsrGUISummary ?? string.Empty) + verticalBar;
+                        lines += (CSAttributeDetail.PK.Find(graph, ARRegisterExt.GUISummary, regisExt.UsrGUISummary ?? string.Empty)?.Description ?? string.Empty) + verticalBar;
                         // 商品規格
                         // 單位
                         lines += new string(char.Parse(verticalBar), 2);
@@ -338,7 +338,7 @@ namespace eGUICustomizations.Graph
             return addressLine;
         }
 
-        private (string phone, string email) GetBillingInfo(PXGraph graph, string docType, string refNbr, string customer)
+        private (string phone, string email, string attention) GetBillingInfo(PXGraph graph, string docType, string refNbr, string customer)
         {
             IContact contact = SelectFrom<ARContact>.InnerJoin<ARInvoice>.On<ARInvoice.billContactID.IsEqual<ARContact.contactID>>
                                                     .Where<ARInvoice.refNbr.IsEqual<@P.AsString>>.View.SelectSingleBound(graph, null, refNbr).TopFirst;
@@ -369,7 +369,7 @@ namespace eGUICustomizations.Graph
                                              .Where<Customer.acctCD.IsEqual<@P.AsString>>.View.SelectSingleBound(graph, null, customer).TopFirst;
             }
 
-            return (contact.Phone1, contact.Email);
+            return (contact.Phone1, contact.Email, contact.Attention);
         }
 
         /// <summary>
