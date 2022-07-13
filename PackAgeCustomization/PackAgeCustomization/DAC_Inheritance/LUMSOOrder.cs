@@ -11,7 +11,7 @@ using PX.Objects.SO;
 
 namespace PackAgeCustomization.DAC_Inheritance
 {
-    public class LUMSOOrder : SOOrder
+    public class LUMSOOrder : IBqlTable
     {
 
         [PXSelector(typeof(SelectFrom<SOOrder>
@@ -26,7 +26,7 @@ namespace PackAgeCustomization.DAC_Inheritance
             typeof(SOOrder.orderDesc),
             typeof(BAccount.acctName),
            SubstituteKey = typeof(SOOrder.orderNbr))]
-        public override String OrderNbr { get; set; }
+        public virtual String OrderNbr { get; set; }
     }
 
     public class SOType_TOAttr : PX.Data.BQL.BqlString.Constant<SOType_TOAttr>
