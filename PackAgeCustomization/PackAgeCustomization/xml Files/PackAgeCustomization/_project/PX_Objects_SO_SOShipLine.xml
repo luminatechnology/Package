@@ -1,0 +1,17 @@
+﻿<DAC type="PX.Objects.SO.SOShipLine">
+    <Field FieldName="UsrShipDate" TypeName="date" MapDbTable="SOShipLine" TextAttributes="#CDATA" StorageName="AddColumn">
+        <CDATA name="TextAttributes"><![CDATA[[PXDBDate]
+[PXUIField(DisplayName="Ship Date")]
+]]></CDATA>
+    </Field>
+    <Field FieldName="UsrCarrier" TypeName="string" MapDbTable="SOShipLine" TextAttributes="#CDATA" StorageName="AddColumn">
+        <CDATA name="TextAttributes"><![CDATA[[PXDBString(50)]
+[PXUIField(DisplayName="Carrier")]
+]]></CDATA>
+    </Field>
+    <Field FieldName="UsrTrackingNbr" TypeName="string" MapDbTable="SOShipLine" TextAttributes="#CDATA" StorageName="AddColumn">
+        <CDATA name="TextAttributes"><![CDATA[[PXDBString(50)]
+[PXUIField(DisplayName="TrackingNbr")]
+]]></CDATA>
+    </Field>
+</DAC>
