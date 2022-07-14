@@ -2,7 +2,6 @@
 using PX.Data;
 using PX.Data.BQL.Fluent;
 using PX.Objects.AP;
-using PX.Objects.CS;
 using eGUICustomizations.Descriptor;
 
 namespace eGUICustomizations.DAC
@@ -22,9 +21,7 @@ namespace eGUICustomizations.DAC
         /// </remarks>
         [PXDBString(10/*, IsKey = true*/, IsUnicode = true)]
         [PXUIField(DisplayName = "Personal ID")]
-        [PXDefault()]//typeof(Search2<CSAnswers.value, InnerJoin<Vendor, On<Vendor.noteID, Equal<CSAnswers.refNoteID>>>,
-        //                                           Where<Vendor.bAccountID, Equal<Current<APInvoice.vendorID>>,
-        //                                                And<CSAnswers.attributeID, Equal<PersonalAtt>>>>))]
+        [PXDefault(PersistingCheck = PXPersistingCheck.Nothing)]
         public virtual string PersonalID { get; set; }
         public abstract class personalID : PX.Data.BQL.BqlString.Field<personalID> { }
         #endregion
