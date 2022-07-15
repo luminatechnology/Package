@@ -92,6 +92,7 @@
     <Compile Include="Graph\TWNExportMthsMaint.cs" />
     <Compile Include="Graph\TWNExportTiktTypesMaint.cs" />
     <Compile Include="Graph\TWNGenGUIMediaFile.cs" />
+    <Compile Include="Graph\TWNGenWHTFile.cs" />
     <Compile Include="Graph\TWNGenZeroTaxRateMedFile.cs" />
     <Compile Include="Graph\TWNGUIPrefMaint.cs" />
     <Compile Include="Graph\TWNManGUIAPMaint.cs" />
