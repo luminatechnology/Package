@@ -54,7 +54,13 @@ namespace PX.Objects.AP
             {
                 if (ManualAPBill.Select().Count == 0 && Base.Taxes.Select().Count > 0)
                 {
-                    throw new PXException(TWMessages.NoGUIWithTax);
+                    foreach (TX.TaxTran tran in Base.Taxes.Cache.Cached)
+                    {
+                        if (TX.Tax.PK.Find(Base, tran.TaxID)?.GetExtension<TX.TaxExt>().UsrTWNGUI == true)
+                        {
+                            throw new PXException(TWMessages.NoGUIWithTax);
+                        }
+                    }
                 }
                 else
                 {

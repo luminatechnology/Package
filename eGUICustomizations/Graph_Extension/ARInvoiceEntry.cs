@@ -66,8 +66,6 @@ namespace PX.Objects.AR
 
             ARRegisterExt registerExt = e.Row.GetExtension<ARRegisterExt>();
 
-            //BuyPlasticBag.SetVisible(activateGUI);
-
             PXUIFieldAttribute.SetVisible<ARRegisterExt.usrGUIDate>(e.Cache, null, activateGUI);
             PXUIFieldAttribute.SetVisible<ARRegisterExt.usrGUINbr>(e.Cache, null, activateGUI);
             PXUIFieldAttribute.SetVisible<ARRegisterExt.usrOurTaxNbr>(e.Cache, null, activateGUI);
@@ -145,7 +143,7 @@ namespace PX.Objects.AR
             }
         }
 
-        protected virtual void _(Events.FieldUpdated<ARInvoice.customerID> e, PXFieldUpdated baseHandler)
+        protected void _(Events.FieldUpdated<ARInvoice.customerID> e, PXFieldUpdated baseHandler)
         {
             baseHandler?.Invoke(e.Cache, e.Args);
 
