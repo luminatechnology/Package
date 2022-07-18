@@ -140,43 +140,55 @@ namespace PX.Objects.AP
             //        break;
             //}
 
-            if (GUISetup.Select().TopFirst?.EnableWHT == true && Base.Document.Current?.DocType == APDocType.Invoice)
+            foreach (APTaxTran tran in Base.Taxes.Cache.Cached)
             {
-                TWNWHT wNWHT = new TWNWHT()
+                if (TX.Tax.PK.Find(Base, tran.TaxID)?.TaxType == TX.CSTaxType.Withholding)
                 {
-                    DocType = Base.Document.Current.DocType,
-                    RefNbr = Base.Document.Current.RefNbr
-                };
+                    TWNGUIPreferences pref = GUISetup.Select();
 
-                foreach (CSAnswers answers in SelectFrom<CSAnswers>.Where<CSAnswers.refNoteID.IsEqual<@P.AsGuid>>.View.Select(Base, vendor.NoteID))
-                {
-                    switch (answers.AttributeID)
+                    if (pref?.EnableWHT == true && Base.Document.Current?.DocType == APDocType.Invoice)
                     {
-                        case TWNWHT.PersonalName:
-                            wNWHT.PersonalID = answers.Value;
-                            break;
-                        case TWNWHT.PropertyName:
-                            wNWHT.PropertyID = answers.Value;
-                            break;
-                        case TWNWHT.TypeOfInName:
-                            wNWHT.TypeOfIn = answers.Value;
-                            break;
-                        case TWNWHT.WHTFmtCodeName:
-                            wNWHT.WHTFmtCode = answers.Value;
-                            break;
-                        case TWNWHT.WHTFmtSubName:
-                            wNWHT.WHTFmtSub = answers.Value;
-                            break;
-                        case TWNWHT.WHTTaxPctName:
-                            wNWHT.WHTTaxPct = answers.Value;
-                            break;
-                        case TWNWHT.SecNHICodeName:
-                            wNWHT.SecNHICode = answers.Value;
-                            break;
+                        TWNWHT wNWHT = new TWNWHT()
+                        {
+                            DocType = Base.Document.Current.DocType,
+                            RefNbr = Base.Document.Current.RefNbr
+                        };
+
+                        wNWHT = WHTView.Insert(wNWHT);
+
+                        foreach (CSAnswers answers in SelectFrom<CSAnswers>.Where<CSAnswers.refNoteID.IsEqual<@P.AsGuid>>.View.Select(Base, vendor.NoteID))
+                        {
+                            switch (answers.AttributeID)
+                            {
+                                case TWNWHT.PersonalName:
+                                    wNWHT.PersonalID = answers.Value;
+                                    break;
+                                case TWNWHT.PropertyName:
+                                    wNWHT.PropertyID = answers.Value;
+                                    break;
+                                case TWNWHT.TypeOfInName:
+                                    wNWHT.TypeOfIn = answers.Value;
+                                    break;
+                                case TWNWHT.WHTFmtCodeName:
+                                    wNWHT.WHTFmtCode = answers.Value;
+                                    break;
+                                case TWNWHT.WHTFmtSubName:
+                                    wNWHT.WHTFmtSub = answers.Value;
+                                    break;
+                                case TWNWHT.WHTTaxPctName:
+                                    wNWHT.WHTTaxPct = answers.Value;
+                                    break;
+                                case TWNWHT.SecNHICodeName:
+                                    wNWHT.SecNHICode = answers.Value;
+                                    break;
+                            }
+                        }
+
+                        wNWHT.SecNHIPct = pref.SecGenerationNHIPct;
+
+                        WHTView.Cache.Update(wNWHT);
                     }
                 }
-
-                WHTView.Cache.Update(wNWHT);
             }
         }
 
