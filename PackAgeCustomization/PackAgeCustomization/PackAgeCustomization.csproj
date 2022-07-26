@@ -59,7 +59,8 @@
     <Compile Include="DAC\SOOrderKvExt.cs" />
     <Compile Include="DAC_Extension\EMailAccount_Extension.cs" />
     <Compile Include="DAC_Inheritance\LUMSOOrder.cs" />
-    <Compile Include="Examples.cs" />
+    <Compile Include="Graph_Extensions\ARSetupMaint.cs" />
+    <Compile Include="Graph_Extensions\CustomerMaint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
