@@ -132,7 +132,7 @@ namespace PX.Objects.AR
                                 BranchID      = doc.BranchID,
                                 GUIDirection  = TWNStringList.TWNGUIDirection.Issue,
                                 GUIDate       = docExt.UsrGUIDate.Value.Date.Add(doc.CreatedDateTime.Value.TimeOfDay),
-                                GUITitle      = docExt.UsrGUITitle ?? ARContact.PK.Find(Base, (doc as ARInvoice).BillContactID)?.FullName, // As David's email [GUI Form Adjustment] # 6
+                                GUITitle      = docExt.UsrGUITitle ?? ARContact.PK.Find(Base, (doc as ARInvoice)?.BillContactID)?.FullName, // As David's email [GUI Form Adjustment] # 6
                                 TaxZoneID     = taxZoneID,
                                 TaxCategoryID = taxCateID,
                                 TaxID         = taxID,
@@ -142,7 +142,7 @@ namespace PX.Objects.AR
                                 TaxAmount     = settledTax < 0 ? 0 : settledTax,
                                 AcctCD        = customer.AcctCD,
                                 AcctName      = customer.AcctName,
-                                Remark        = doc.DocDesc,//(appointment is null) ? string.Empty : appointment.RefNbr,
+                                Remark        = doc.DocDesc,
                                 BatchNbr      = doc.BatchNbr,
                                 DocType       = doc.DocType,
                                 OrderNbr      = doc.RefNbr,
