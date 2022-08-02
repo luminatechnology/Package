@@ -132,7 +132,7 @@ namespace eGUICustomizations.Graph
                     // 載具顯碼id1(明碼)
                     lines += gUITrans.CarrierID + verticalBar;
                     // 載具隱碼id2(內碼)
-                    lines += verticalBar;
+                    lines += gUITrans.CarrierID + verticalBar;
                     // 發票號碼
                     lines += gUITrans.GUINbr + verticalBar;
                     // 隨機碼
