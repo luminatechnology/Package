@@ -96,21 +96,21 @@ namespace eGUICustomizations.Graph
                     // 買受人公司名稱
                     lines += gUITrans.GUITitle + verticalBar;
                     // 會員編號
-                    (string phone, string email, string attention) = graph.GetBillingInfo(graph, gUITrans.DocType, gUITrans.OrderNbr, gUITrans.CustVend);
-                    lines += graph.GetMemberNbr(graph, register?.CustomerID, new string[] { gUITrans.CustVend, phone }) + verticalBar;
+                    (string Phone, string Email, string Attention) = graph.GetBillingInfo(graph, gUITrans.DocType, gUITrans.OrderNbr, gUITrans.CustVend);
+                    lines += graph.GetMemberNbr(graph, register?.CustomerID, new string[] { gUITrans.CustVend, Phone }) + verticalBar;
                     // 會員姓名
-                    lines += string.IsNullOrEmpty(gUITrans.TaxNbr) ? attention : gUITrans.GUITitle + verticalBar;
+                    lines += ((string.IsNullOrEmpty(gUITrans.TaxNbr) ? Attention : gUITrans.GUITitle) ?? string.Empty) + verticalBar;
                     // 會員郵遞區號
-                    (string addressLine, string postalCode) = graph.GetBillingAddress(graph, gUITrans.DocType, gUITrans.OrderNbr, gUITrans.CustVend);
-                    lines += (postalCode ?? string.Empty) + verticalBar;
+                    (string AddressLine, string PostalCode) = graph.GetBillingAddress(graph, gUITrans.DocType, gUITrans.OrderNbr, gUITrans.CustVend);
+                    lines += (PostalCode ?? string.Empty) + verticalBar;
                     // 會員地址
-                    lines += (string.IsNullOrEmpty(gUITrans.TaxNbr) ? addressLine : string.Empty) + verticalBar;
+                    lines += (string.IsNullOrEmpty(gUITrans.TaxNbr) ? AddressLine : string.Empty) + verticalBar;
                     // 會員電話
                     lines += verticalBar;
                     // 會員行動電話
-                    lines += phone + verticalBar;
+                    lines += Phone + verticalBar;
                     // 會員電子郵件
-                    lines += email + verticalBar;
+                    lines += Email + verticalBar;
                     // 紅利點數折扣金額
                     lines += verticalBar;
                     // 索取紙本發票                       
@@ -176,7 +176,7 @@ namespace eGUICustomizations.Graph
                             // 單位
                             lines += new string(char.Parse(verticalBar), 2);
                             // 單價
-                            lines += UnitPrice + verticalBar;
+                            lines += Math.Round(UnitPrice, 0) + verticalBar;
                             // 數量
                             lines += (tran.Qty == 0m ? 1 : tran.Qty) + verticalBar;
                             // 未稅金額
@@ -381,7 +381,7 @@ namespace eGUICustomizations.Graph
         {
             bool iseGUICust = Convert.ToBoolean(Convert.ToInt32(CSAnswers.PK.Find(graph, Customer.PK.Find(graph, customerID)?.NoteID, "EGUICUSMEM")?.Value ?? "0") );
 
-            // [0] -> TWNGUITrans.CustVend, [1] -> TWNGUITrans.GUITitle
+            // [0] -> TWNGUITrans.CustVend, [1] -> billing phone
             return iseGUICust == true ? strings[0] + strings[1] : strings[0];
         }
 
