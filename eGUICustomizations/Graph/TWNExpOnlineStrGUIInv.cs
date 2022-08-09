@@ -64,6 +64,7 @@ namespace eGUICustomizations.Graph
                 foreach (TWNGUITrans gUITrans in tWNGUITrans)
                 {
                     bool isCM = gUITrans.GUIFormatcode == TWGUIFormatCode.vATOutCode33;
+                    bool isB2C = string.IsNullOrEmpty(gUITrans.TaxNbr);
 
                     ARRegister    register = ARRegister.PK.Find(graph, gUITrans.DocType, gUITrans.OrderNbr);
                     ARRegisterExt regisExt = register.GetExtension<ARRegisterExt>();
@@ -99,12 +100,12 @@ namespace eGUICustomizations.Graph
                     (string Phone, string Email, string Attention) = graph.GetBillingInfo(graph, gUITrans.DocType, gUITrans.OrderNbr, gUITrans.CustVend);
                     lines += graph.GetMemberNbr(graph, register?.CustomerID, new string[] { gUITrans.CustVend, Phone }) + verticalBar;
                     // 會員姓名
-                    lines += ((string.IsNullOrEmpty(gUITrans.TaxNbr) ? Attention : gUITrans.GUITitle) ?? string.Empty) + verticalBar;
+                    lines += ((isB2C == true ? Attention : gUITrans.GUITitle) ?? string.Empty) + verticalBar;
                     // 會員郵遞區號
                     (string AddressLine, string PostalCode) = graph.GetBillingAddress(graph, gUITrans.DocType, gUITrans.OrderNbr, gUITrans.CustVend);
                     lines += (PostalCode ?? string.Empty) + verticalBar;
                     // 會員地址
-                    lines += (string.IsNullOrEmpty(gUITrans.TaxNbr) ? AddressLine : string.Empty) + verticalBar;
+                    lines += (isB2C == true? AddressLine : string.Empty) + verticalBar;
                     // 會員電話
                     lines += verticalBar;
                     // 會員行動電話
@@ -150,7 +151,7 @@ namespace eGUICustomizations.Graph
                         ARInvoice invoice = ARInvoice.PK.Find(graph, tran.TranType, tran.RefNbr);
 
                         (decimal UnitPrice, decimal ExtPrice) = graph.CalcTaxAmt(invoice.TaxCalcMode == PX.Objects.TX.TaxCalculationMode.Gross,
-                                                                                 !string.IsNullOrEmpty(gUITrans.TaxNbr),
+                                                                                 !isB2C,
                                                                                  tran.CuryDiscAmt > 0 ? (tran.CuryTranAmt / tran.Qty).Value : tran.CuryUnitPrice.Value,
                                                                                  tran.CuryTranAmt.Value/*tran.CuryExtPrice.Value*/);
 
@@ -252,8 +253,8 @@ namespace eGUICustomizations.Graph
                         TWNGUIPrepayAdjust prepayAdj = SelectFrom<TWNGUIPrepayAdjust>.Where<TWNGUIPrepayAdjust.appliedGUINbr.IsEqual<@P.AsString>.And<TWNGUIPrepayAdjust.sequenceNo.IsEqual<@P.AsInt>>>
                                                                                      .AggregateTo<Sum<TWNGUIPrepayAdjust.netAmt,
                                                                                                       Sum<TWNGUIPrepayAdjust.taxAmt>>>.View.ReadOnly.Select(graph, gUITrans.GUINbr, gUITrans.SequenceNo);
-
-                        bool isB2C = string.IsNullOrEmpty(gUITrans.TaxNbr);
+                        // Add condition to avoid printing without GUI prepayment.
+                        if (string.IsNullOrEmpty(prepayAdj.AppliedGUINbr) ) { break; }
 
                         decimal? netAmt   = hasAdjust == false ? gUITrans.NetAmount + gUITrans.TaxAmount : prepayAdj.NetAmt + prepayAdj.TaxAmt;
                         decimal? grossAmt = hasAdjust == false ? gUITrans.NetAmount : prepayAdj.NetAmt;
