@@ -39,7 +39,9 @@ namespace PX.Objects.AR
                 doc.Released == true &&
                 doc.DocType.IsIn(ARDocType.Invoice, ARDocType.CreditMemo, ARDocType.CashSale, ARDocType.Prepayment) &&
                 ((string.IsNullOrEmpty(docExt.UsrGUINbr) && docExt.UsrVATOutCode == TWGUIFormatCode.vATOutCode36) || !string.IsNullOrEmpty(docExt.UsrVATOutCode)) &&
-                doc.OpenDoc == true)
+                // Cach sale won't have shipment, standard will close Invoice And Clear Balances.
+                (doc.OpenDoc == true || (doc.OpenDoc == false && doc.DocType == ARDocType.CashSale))
+                )
             {
                 if (docExt.UsrVATOutCode.IsIn(TWGUIFormatCode.vATOutCode33, TWGUIFormatCode.vATOutCode34) &&
                     docExt.UsrCreditAction == TWNStringList.TWNCreditAction.NO)
