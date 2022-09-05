@@ -254,39 +254,40 @@ namespace eGUICustomizations.Graph
                                                                                      .AggregateTo<Sum<TWNGUIPrepayAdjust.netAmt,
                                                                                                       Sum<TWNGUIPrepayAdjust.taxAmt>>>.View.ReadOnly.Select(graph, gUITrans.GUINbr, gUITrans.SequenceNo);
                         // Add condition to avoid printing without GUI prepayment.
-                        if (string.IsNullOrEmpty(prepayAdj.AppliedGUINbr) ) { break; }
+                        if (!string.IsNullOrEmpty(prepayAdj.AppliedGUINbr))
+                        {
+                            decimal? netAmt = hasAdjust == false ? gUITrans.NetAmount + gUITrans.TaxAmount : prepayAdj.NetAmt + prepayAdj.TaxAmt;
+                            decimal? grossAmt = hasAdjust == false ? gUITrans.NetAmount : prepayAdj.NetAmt;
 
-                        decimal? netAmt   = hasAdjust == false ? gUITrans.NetAmount + gUITrans.TaxAmount : prepayAdj.NetAmt + prepayAdj.TaxAmt;
-                        decimal? grossAmt = hasAdjust == false ? gUITrans.NetAmount : prepayAdj.NetAmt;
-
-                        // 明細代號
-                        lines += "D" + verticalBar;
-                        // 序號
-                        lines += num++ + verticalBar;
-                        // 訂單編號
-                        lines += gUITrans.OrderNbr + verticalBar;
-                        // 商品編號
-                        // 商品條碼
-                        lines += new string(char.Parse(verticalBar), 2);
-                        // 商品名稱
-                        lines += string.Format("{0}預收款", hasAdjust ? "扣:" : "") + verticalBar;
-                        // 商品規格
-                        // 單位
-                        // 單價
-                        lines += new string(char.Parse(verticalBar), 3);
-                        // 數量
-                        lines += 0 + verticalBar;
-                        // 未稅金額
-                        lines += (isB2C == true ? netAmt : grossAmt) + verticalBar;
-                        // 含稅金額
-                        lines += netAmt + verticalBar;
-                        // 健康捐
-                        lines += 0 + verticalBar;
-                        // 稅率別
-                        lines += TWNExpGUIInv2BankPro.GetTaxType(gUITrans.VATType) + verticalBar;
-                        // 紅利點數折扣金額
-                        // 明細備註
-                        lines += new string(char.Parse(verticalBar), 1) + "\r\n";
+                            // 明細代號
+                            lines += "D" + verticalBar;
+                            // 序號
+                            lines += num++ + verticalBar;
+                            // 訂單編號
+                            lines += gUITrans.OrderNbr + verticalBar;
+                            // 商品編號
+                            // 商品條碼
+                            lines += new string(char.Parse(verticalBar), 2);
+                            // 商品名稱
+                            lines += string.Format("{0}預收款", hasAdjust ? "扣:" : "") + verticalBar;
+                            // 商品規格
+                            // 單位
+                            // 單價
+                            lines += new string(char.Parse(verticalBar), 3);
+                            // 數量
+                            lines += 0 + verticalBar;
+                            // 未稅金額
+                            lines += (isB2C == true ? netAmt : grossAmt) + verticalBar;
+                            // 含稅金額
+                            lines += netAmt + verticalBar;
+                            // 健康捐
+                            lines += 0 + verticalBar;
+                            // 稅率別
+                            lines += TWNExpGUIInv2BankPro.GetTaxType(gUITrans.VATType) + verticalBar;
+                            // 紅利點數折扣金額
+                            // 明細備註
+                            lines += new string(char.Parse(verticalBar), 1) + "\r\n";
+                        }
                     }
                     #endregion
                 }
