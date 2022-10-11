@@ -140,6 +140,8 @@ namespace PX.Objects.AR
                 }
 
                 registerExt.UsrCreditAction = TWNStringList.TWNCreditAction.CN;
+                registerExt.UsrB2CType      = TWNStringList.TWNB2CType.DEF;
+                registerExt.UsrCarrierID    = registerExt.UsrNPONbr = null;
             }
         }
 
