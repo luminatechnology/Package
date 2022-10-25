@@ -131,7 +131,7 @@ namespace PX.Objects.AR
                 {
                     case TWGUIFormatCode.vATOutCode31:
                     case TWGUIFormatCode.vATOutCode35:
-                        registerExt.UsrVATOutCode = TWGUIFormatCode.vATOutCode33;
+                        registerExt.UsrVATOutCode   = TWGUIFormatCode.vATOutCode33;
                         break;
 
                     case TWGUIFormatCode.vATOutCode32:
@@ -139,7 +139,7 @@ namespace PX.Objects.AR
                         break;
                 }
 
-                registerExt.UsrCreditAction = TWNStringList.TWNCreditAction.CN;
+                registerExt.UsrCreditAction = TWNStringList.TWNCreditAction.VG;
                 registerExt.UsrB2CType      = TWNStringList.TWNB2CType.DEF;
                 registerExt.UsrCarrierID    = registerExt.UsrNPONbr = null;
             }
@@ -156,6 +156,8 @@ namespace PX.Objects.AR
                 if (row.DocType == ARDocType.CreditMemo)
                 {
                     vATInCode = TWGUIFormatCode.vATOutCode33;
+
+                    e.Cache.SetValue<ARRegisterExt.usrCreditAction>(row, TWNStringList.TWNCreditAction.VG);
                 }
                 else if (row.DocType.IsIn(ARDocType.Invoice, ARDocType.CashSale))
                 {
