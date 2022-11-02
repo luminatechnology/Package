@@ -31,6 +31,10 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="eGUICustomizations, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Bin\eGUICustomizations.dll</HintPath>
+    </Reference>
     <Reference Include="PX.Common">
       <HintPath>..\..\..\..\Bin\PX.Common.dll</HintPath>
     </Reference>
@@ -57,7 +61,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DAC\SOOrderKvExt.cs" />
+    <Compile Include="DAC_Extension\ARAdjustExtensions.cs" />
     <Compile Include="DAC_Extension\EMailAccount_Extension.cs" />
+    <Compile Include="DAC_Extension\SOLineForDirectInvoiceExtensions.cs" />
+    <Compile Include="DAC_Extension\SOOrderShipmentExtensions.cs" />
     <Compile Include="DAC_Inheritance\LUMSOOrder.cs" />
     <Compile Include="Graph_Extensions\ARSetupMaint.cs" />
     <Compile Include="Graph_Extensions\CustomerMaint.cs" />
