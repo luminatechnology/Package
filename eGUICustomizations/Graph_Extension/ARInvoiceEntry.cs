@@ -174,7 +174,7 @@ namespace PX.Objects.AR
             {
                 var row = e.Row as ARInvoice;
 
-                if (row.CuryDocBal != decimal.Zero && string.IsNullOrEmpty(row.GetExtension<ARRegisterExt>().UsrVATOutCode))
+                if (row.CuryDocBal != decimal.Zero && string.IsNullOrEmpty(row.GetExtension<ARRegisterExt>().UsrVATOutCode) && row.CuryTaxTotal > 0m)
                 {
                     Base.Document.Ask(TWMessages.RemindHeader, TWMessages.ReminderMesg, MessageButtons.OKCancel);
 

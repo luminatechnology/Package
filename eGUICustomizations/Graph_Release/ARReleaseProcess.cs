@@ -94,7 +94,7 @@ namespace PX.Objects.AR
                         string gUINbr = gUINbrs[i].TrimStart();
 
                         // Avoid standard logic calling this method twice and inserting duplicate records into TWNGUITrans.
-                        if (APReleaseProcess_Extension.CountExistedRec(Base, gUINbr, docExt.UsrVATOutCode, doc.RefNbr) > 0) { return; }
+                        if (APReleaseProcess_Extension.CountExistedRec(Base, gUINbr, docExt.UsrVATOutCode, doc.RefNbr) > 0) { continue; }
 
                         TWNGUITrans tWNGUITrans = rp.InitAndCheckOnAR(gUINbr, docExt.UsrVATOutCode);
 

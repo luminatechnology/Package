@@ -143,14 +143,15 @@ namespace eGUICustomizations.Graph
                     lines += 0 + verticalBar + "\r\n";
                     #endregion
 
+                    //ARInvoice invoice = ARInvoice.PK.Find(graph, gUITrans.DocType, gUITrans.OrderNbr);
+
+                    bool isInclusive = invGraph.AmountInclusiveTax((register as ARInvoice).TaxCalcMode, gUITrans.TaxID);
                     int num = 1;
                     string refNbr = string.Empty;
                     decimal? totalUP = 0m, totalEP = 0m, totalTA = 0m;
                     foreach (ARTran tran in invGraph.RetrieveARTran(gUITrans.OrderNbr))
                     {
-                        ARInvoice invoice = ARInvoice.PK.Find(graph, tran.TranType, tran.RefNbr);
-
-                        (decimal UnitPrice, decimal ExtPrice) = graph.CalcTaxAmt(invoice.TaxCalcMode == PX.Objects.TX.TaxCalculationMode.Gross,
+                        (decimal UnitPrice, decimal ExtPrice) = graph.CalcTaxAmt(isInclusive == false,//invoice.TaxCalcMode == PX.Objects.TX.TaxCalculationMode.Gross,
                                                                                  !isB2C,
                                                                                  tran.CuryDiscAmt > 0 ? (tran.CuryTranAmt / tran.Qty).Value : tran.CuryUnitPrice.Value,
                                                                                  tran.CuryTranAmt.Value/*tran.CuryExtPrice.Value*/);
@@ -183,7 +184,7 @@ namespace eGUICustomizations.Graph
                             // 未稅金額
                             lines += ExtPrice + verticalBar;
                             // 含稅金額
-                            lines += (invoice.TaxCalcMode != PX.Objects.TX.TaxCalculationMode.Gross ? tran.CuryTranAmt * (decimal)1.05 : tran.CuryTranAmt) + verticalBar;
+                            lines += (/*invoice.TaxCalcMode != PX.Objects.TX.TaxCalculationMode.Gross */ isInclusive == true? tran.CuryTranAmt * (decimal)1.05 : tran.CuryTranAmt) + verticalBar;
                             // 健康捐
                             lines += 0 + verticalBar;
                             // 稅率別
@@ -197,7 +198,7 @@ namespace eGUICustomizations.Graph
                             refNbr   = isCM == false ? tran.RefNbr : tran.OrigInvoiceNbr;
                             totalUP += UnitPrice;
                             totalEP += ExtPrice;
-                            totalTA += invoice.TaxCalcMode != PX.Objects.TX.TaxCalculationMode.Gross ? tran.CuryTranAmt * (decimal)1.05 : tran.CuryTranAmt;
+                            totalTA += /*invoice.TaxCalcMode != PX.Objects.TX.TaxCalculationMode.Gross */ isInclusive == true ? tran.CuryTranAmt * (decimal)1.05 : tran.CuryTranAmt;
                         }
                     }
 
