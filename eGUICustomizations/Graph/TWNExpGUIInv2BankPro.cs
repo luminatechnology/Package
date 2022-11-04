@@ -119,7 +119,7 @@ namespace eGUICustomizations.Graph
                     value = true;
                     break;
                 case TaxCalculationMode.TaxSetting:
-                    value = Tax.PK.Find(this, taxID).TaxCalcRule == CSTaxCalcLevel.Inclusive;
+                    value = Tax.PK.Find(this, taxID).TaxCalcLevel == CSTaxCalcLevel.Inclusive;
                     break;
                 default:
                     value = false;
