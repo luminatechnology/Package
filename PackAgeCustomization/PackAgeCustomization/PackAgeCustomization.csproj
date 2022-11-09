@@ -66,6 +66,7 @@
     <Compile Include="DAC_Extension\SOLineForDirectInvoiceExtensions.cs" />
     <Compile Include="DAC_Extension\SOOrderShipmentExtensions.cs" />
     <Compile Include="DAC_Inheritance\LUMSOOrder.cs" />
+    <Compile Include="Graph_Extensions\ARPaymentEntry.cs" />
     <Compile Include="Graph_Extensions\ARSetupMaint.cs" />
     <Compile Include="Graph_Extensions\CustomerMaint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
