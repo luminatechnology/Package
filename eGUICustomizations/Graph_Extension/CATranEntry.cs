@@ -1,6 +1,7 @@
 using PX.Data;
 using PX.Data.BQL;
 using PX.Data.BQL.Fluent;
+using PX.Objects.CM;
 using PX.Objects.TX;
 using eGUICustomizations.DAC;
 using eGUICustomizations.Descriptor;
@@ -15,6 +16,21 @@ namespace PX.Objects.CA
                          .Where<TWNManualGUIBank.adjRefNbr.IsEqual<CAAdj.adjRefNbr.FromCurrent>>.View ManGUIBank;
 
         public PXSetup<TWNGUIPreferences> GUIPreferences;
+        #endregion
+
+        #region Override Method
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            PXCache<AP.Vendor> vendor = new PXCache<AP.Vendor>(Base);
+
+            Base.Caches[typeof(AP.Vendor)] = vendor;
+
+            PXCache<EP.EPEmployee> employee = new PXCache<EP.EPEmployee>(Base);
+
+            Base.Caches[typeof(EP.EPEmployee)] = employee;
+        }
         #endregion
 
         #region Event Handlers
@@ -34,9 +50,9 @@ namespace PX.Objects.CA
         {
             baseHandler?.Invoke(e.Cache, e.Args);
 
-            if (Base.CurrentDocument.Current == null || activateGUI.Equals(false)) { return; }
+            if (e.Row == null || activateGUI.Equals(false)) { return; }
 
-            decimal taxSum = 0;
+            decimal taxSum = 0m;
 
             foreach (TWNManualGUIBank row in ManGUIBank.Select())
             {
@@ -44,15 +60,15 @@ namespace PX.Objects.CA
 
                 if (tWNGUIValidation.errorOccurred.Equals(true))
                 {
-                    e.Cache.RaiseExceptionHandling<TWNManualGUIExpense.gUINbr>(e.Row, row.GUINbr, new PXSetPropertyException(tWNGUIValidation.errorMessage, PXErrorLevel.RowError));
+                    ManGUIBank.Cache.RaiseExceptionHandling<TWNManualGUIExpense.gUINbr>(row, row.GUINbr, new PXSetPropertyException(tWNGUIValidation.errorMessage, PXErrorLevel.RowError));
                 }
 
                 taxSum += row.TaxAmt.Value;
             }
 
-            if (taxSum != Base.CurrentDocument.Current.TaxTotal)
+            if (taxSum != 0m && taxSum != e.Row.TaxTotal)
             {
-                throw new PXException(TWMessages.ChkTotalGUIAmt);
+                ManGUIBank.Cache.RaiseExceptionHandling<TWNManualGUIBank.taxAmt>(ManGUIBank.Current, taxSum, new PXSetPropertyException(TWMessages.ChkTotalGUIAmt));
             }
         }
 
@@ -92,7 +108,7 @@ namespace PX.Objects.CA
             foreach (TaxRev taxRev in SelectFrom<TaxRev>.Where<TaxRev.taxID.IsEqual<@P.AsString>
                                                                .And<TaxRev.taxType.IsEqual<TaxRev.taxType>>>.View.Select(Base, row.TaxID, "P")) // P = Group type (Input)
             {
-                row.TaxAmt = row.NetAmt * (taxRev.TaxRate / taxRev.NonDeductibleTaxRate);
+                row.TaxAmt = PXDBCurrencyAttribute.BaseRound(Base, (row.NetAmt * (taxRev.TaxRate / taxRev.NonDeductibleTaxRate)).Value);
             }
         }
         #endregion
