@@ -73,7 +73,7 @@ namespace eGUICustomizations.Graph
                     // 主檔代號
                     lines += "M" + verticalBar;
                     // 訂單編號
-                    lines += (isCM == false ? gUITrans.OrderNbr : register?.OrigRefNbr ?? FixedMsg) + verticalBar;
+                    lines += (isCM == false ? gUITrans.OrderNbr : register?.OrigRefNbr ?? graph.GetRefNbrByGUINbr(graph, gUITrans.GUINbr)) + verticalBar;
                     // 訂單狀態
                     lines += (gUITrans.GUIStatus == TWNStringList.TWNGUIStatus.Voided ? 2 : isCM == false ? 0 : 3) + verticalBar;
                     // 訂單日期
@@ -384,6 +384,13 @@ namespace eGUICustomizations.Graph
 
             // [0] -> TWNGUITrans.CustVend, [1] -> billing phone
             return iseGUICust == true ? strings[0] + strings[1] : strings[0];
+        }
+
+        private string GetRefNbrByGUINbr(PXGraph graph, string gUINbr)
+        {
+            return SelectFrom<TWNGUITrans>.Where<TWNGUITrans.gUINbr.IsEqual<@P.AsString>
+                                                 .And<TWNGUITrans.gUIFormatcode.IsEqual<@P.AsString>>>.View
+                                          .SelectSingleBound(graph, null, gUINbr, TWGUIFormatCode.vATOutCode35).TopFirst?.OrderNbr;
         }
 
         public virtual (decimal UnitPrice, decimal ExtPrice) CalcTaxAmt(bool isGross, bool hasTaxNbr, decimal unitPrice, decimal extPrice)

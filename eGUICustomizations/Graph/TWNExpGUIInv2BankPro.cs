@@ -113,10 +113,10 @@ namespace eGUICustomizations.Graph
             switch (taxCalcMode)
             {
                 case TaxCalculationMode.Gross:
-                    value = false;
+                    value = true;
                     break;
                 case TaxCalculationMode.Net:
-                    value = true;
+                    value = false;
                     break;
                 case TaxCalculationMode.TaxSetting:
                     value = Tax.PK.Find(this, taxID).TaxCalcLevel == CSTaxCalcLevel.Inclusive;
