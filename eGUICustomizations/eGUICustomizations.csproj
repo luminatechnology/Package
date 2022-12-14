@@ -77,6 +77,7 @@
     <Compile Include="DAC\TWNWHTTran.cs" />
     <Compile Include="DAC_Extension\ARRegisterExtensions.cs" />
     <Compile Include="DAC_Extension\TaxExtensions.cs" />
+    <Compile Include="DAC_Extension\TaxZoneExtensions.cs" />
     <Compile Include="Descriptor\TWMessages.cs" />
     <Compile Include="Descriptor\TWNAttribute.cs" />
     <Compile Include="Descriptor\TWNB2CPrinter.cs" />

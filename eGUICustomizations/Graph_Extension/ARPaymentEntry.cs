@@ -14,6 +14,8 @@ namespace PX.Objects.AR
 {
     public class ARPaymentEntry_Extension : PXGraphExtension<ARPaymentEntry_Workflow, ARPaymentEntry>
     {
+        public const string PRINTPREPA_Attr = "PRINTPREPA";
+
         public bool activateGUI = TWNGUIValidation.ActivateTWGUI(new PXGraph());
         public TWNReleaseProcess rp = PXGraph.CreateInstance<TWNReleaseProcess>();
 
@@ -179,7 +181,7 @@ namespace PX.Objects.AR
 
             if (custNoteID != null && Base.CurrentDocument.Current?.DocType == ARDocType.Prepayment)
             {
-                var value = CS.CSAnswers.PK.Find(Base, custNoteID, "PRINTPREPA")?.Value;
+                var value = CS.CSAnswers.PK.Find(Base, custNoteID, PRINTPREPA_Attr)?.Value;
 
                 e.NewValue = Convert.ToBoolean(Convert.ToInt32(value)) == true ? CS.CSAnswers.PK.Find(Base, custNoteID, ARRegisterExt.VATOUTFRMTName)?.Value : null;
             }

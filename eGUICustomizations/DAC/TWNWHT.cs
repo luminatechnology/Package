@@ -136,13 +136,11 @@ namespace eGUICustomizations.DAC
         #endregion
 
         #region SecNHICode
-        public const string SecNHICodeName = "SECNHICode";
+        public const string SecNHICodeName = "SECNHICODE";
         public class SecNHICodeAtt : PX.Data.BQL.BqlString.Constant<SecNHICodeAtt>
         {
             public SecNHICodeAtt() : base(SecNHICodeName) { }
         }
-
-
         [PXDBString(2, IsFixed = true, InputMask = "")]
         [PXUIField(DisplayName = "2GNHI Code")]
         //[PXDefault(typeof(Search<CSAnswers.value, Where<CSAnswers.refNoteID, Equal<Current<Vendor.noteID>>,
