@@ -92,40 +92,13 @@ namespace PX.Objects.SO
                                                                                                                                                    TWNStringList.TWNB2CType.DEF);
             }
 
-            if (invoice.CuryUnpaidBalance == 0m && Convert.ToBoolean(Convert.ToInt32(CS.CSAnswers.PK.Find(Base, customerNoteID, ARPaymentEntry_Extension.PRINTPREPA_Attr)?.Value ?? "0")) == true)
+            if (e.Row.CuryUnpaidBalance == 0m && Convert.ToBoolean(Convert.ToInt32(CS.CSAnswers.PK.Find(Base, customerNoteID, ARPaymentEntry_Extension.PRINTPREPA_Attr)?.Value ?? "0")) == true)
             {
                 Base.Document.Cache.SetValue<ARRegisterExt.usrVATOutCode>(invoice, eGUICustomizations.DAC.TWGUIFormatCode.vATOutCode36);
                 Base.Document.Cache.SetValue<ARRegisterExt.usrSummaryPrint>(invoice, null);
                 Base.Document.Cache.SetValue<ARRegisterExt.usrGUISummary>(invoice, null);
             }
         }
-
-        //protected void _(Events.FieldUpdated<ARInvoice.customerID> e, PXFieldUpdated baseHandler)
-        //{
-        //    baseHandler?.Invoke(e.Cache, e.Args);
-
-        //    Guid? customerNoteID = Customer.PK.Find(Base, (int?)e.NewValue)?.NoteID;
-
-        //    Base.Document.Cache.SetValue<ARRegisterExt.usrSummaryPrint>(e.Row, Convert.ToBoolean(Convert.ToInt32(CS.CSAnswers.PK.Find(Base, customerNoteID, "GUISUMPRNT")?.Value ?? "0")));
-        //    Base.Document.Cache.SetValue<ARRegisterExt.usrGUISummary>(e.Row, CS.CSAnswers.PK.Find(Base, customerNoteID, ARRegisterExt.GUISummary)?.Value);
-
-        //    var customer_Attr = CS.CSAnswers.PK.Find(Base, customerNoteID, "GUIECINV");
-
-        //    if (customer_Attr != null & Convert.ToBoolean(Convert.ToInt32(customer_Attr?.Value ?? "0")) == true)
-        //    {
-        //        Base.Document.Cache.SetValue<ARRegisterExt.usrTaxNbr>(e.Row, GetSOrderUDFValue(ARRegisterExt.TaxNbrName));
-        //        Base.Document.Cache.SetValue<ARRegisterExt.usrGUITitle>(e.Row, GetSOrderUDFValue("GUITITLE"));
-
-        //        string carrierID = (string)GetSOrderUDFValue("GUICARRIER");
-        //        Base.Document.Cache.SetValue<ARRegisterExt.usrCarrierID>(e.Row, carrierID);
-
-        //        string nPONbr = (string)GetSOrderUDFValue("GUINPONBR");
-        //        Base.Document.Cache.SetValue<ARRegisterExt.usrNPONbr>(e.Row, nPONbr);
-        //        Base.Document.Cache.SetValue<ARRegisterExt.usrB2CType>(e.Row, !string.IsNullOrEmpty(carrierID) ? TWNStringList.TWNB2CType.MC : 
-        //                                                                                                         !string.IsNullOrEmpty(nPONbr) ? TWNStringList.TWNB2CType.NPO : 
-        //                                                                                                                                         TWNStringList.TWNB2CType.DEF);
-        //    }           
-        //}
         #endregion
 
         #region Methods
