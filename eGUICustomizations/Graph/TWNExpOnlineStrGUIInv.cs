@@ -149,10 +149,10 @@ namespace eGUICustomizations.Graph
                     decimal? totalUP = 0m, totalEP = 0m, totalTA = 0m;
                     foreach (ARTran tran in invGraph.RetrieveARTran(gUITrans.OrderNbr))
                     {
-                        (decimal UnitPrice, decimal ExtPrice) = graph.CalcTaxAmt(isInclusive == true,//invoice.TaxCalcMode == PX.Objects.TX.TaxCalculationMode.Gross,
+                        (decimal UnitPrice, decimal ExtPrice) = graph.CalcTaxAmt(isInclusive,
                                                                                  !isB2C,
                                                                                  tran.CuryDiscAmt > 0 ? (tran.CuryTranAmt / tran.Qty).Value : tran.CuryUnitPrice.Value,
-                                                                                 tran.CuryTranAmt.Value/*tran.CuryExtPrice.Value*/);
+                                                                                 tran.CuryTranAmt.Value);
 
                         if (regisExt.UsrSummaryPrint == false)
                         {
@@ -182,7 +182,7 @@ namespace eGUICustomizations.Graph
                             // 未稅金額
                             lines += ExtPrice + verticalBar;
                             // 含稅金額
-                            lines += (/*invoice.TaxCalcMode != PX.Objects.TX.TaxCalculationMode.Gross */ isInclusive == false? tran.CuryTranAmt * (decimal)1.05 : tran.CuryTranAmt) + verticalBar;
+                            lines += (isInclusive == false ? decimal.Multiply(tran.CuryTranAmt.Value, 1.05m) : tran.CuryTranAmt) + verticalBar;
                             // 健康捐
                             lines += 0 + verticalBar;
                             // 稅率別
@@ -196,7 +196,7 @@ namespace eGUICustomizations.Graph
                             refNbr   = isCM == false ? tran.RefNbr : tran.OrigInvoiceNbr;
                             totalUP += UnitPrice;
                             totalEP += ExtPrice;
-                            totalTA += /*invoice.TaxCalcMode != PX.Objects.TX.TaxCalculationMode.Gross */ isInclusive == false ? tran.CuryTranAmt * (decimal)1.05 : tran.CuryTranAmt;
+                            totalTA += isInclusive == false ? decimal.Multiply(tran.CuryTranAmt.Value, 1.05m) : tran.CuryTranAmt;
                         }
                     }
 
@@ -393,22 +393,22 @@ namespace eGUICustomizations.Graph
                                           .SelectSingleBound(graph, null, gUINbr, TWGUIFormatCode.vATOutCode35).TopFirst?.OrderNbr;
         }
 
-        public virtual (decimal UnitPrice, decimal ExtPrice) CalcTaxAmt(bool isGross, bool hasTaxNbr, decimal unitPrice, decimal extPrice)
+        public virtual (decimal UnitPrice, decimal ExtPrice) CalcTaxAmt(bool isInclusive, bool hasTaxNbr, decimal unitPrice, decimal extPrice)
         {
             // B2C
             if (hasTaxNbr == false)
             {
-                if (isGross == false)
+                if (isInclusive == false)
                 {
-                    return (decimal.Multiply(unitPrice, (decimal)1.05), decimal.Multiply(extPrice, (decimal)1.05));
+                    return (decimal.Multiply(unitPrice, 1.05m), decimal.Multiply(extPrice, 1.05m));
                 }
             }
             // B2B
             else
             {
-                if (isGross == true)
+                if (isInclusive == true)
                 {
-                    return (decimal.Divide(unitPrice, (decimal)1.05), decimal.Divide(extPrice, (decimal)1.05));
+                    return (decimal.Divide(unitPrice, 1.05m), decimal.Divide(extPrice, 1.05m));
                 }
             }
 
