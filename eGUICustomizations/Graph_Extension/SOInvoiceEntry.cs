@@ -92,7 +92,7 @@ namespace PX.Objects.SO
                                                                                                                                                    TWNStringList.TWNB2CType.DEF);
             }
 
-            if (e.Row.CuryUnpaidBalance == 0m && Convert.ToBoolean(Convert.ToInt32(CS.CSAnswers.PK.Find(Base, customerNoteID, ARPaymentEntry_Extension.PRINTPREPA_Attr)?.Value ?? "0")) == true)
+            if (e.Row.CuryUnpaidBalance == 0m && ARPaymentEntry_Extension.GetCustomPrintPrepayAttr(Base, customerNoteID) == true)//Convert.ToBoolean(Convert.ToInt32(CS.CSAnswers.PK.Find(Base, customerNoteID, ARPaymentEntry_Extension.PRINTPREPA_Attr)?.Value ?? "0")) == true)
             {
                 Base.Document.Cache.SetValue<ARRegisterExt.usrVATOutCode>(invoice, eGUICustomizations.DAC.TWGUIFormatCode.vATOutCode36);
                 Base.Document.Cache.SetValue<ARRegisterExt.usrSummaryPrint>(invoice, null);

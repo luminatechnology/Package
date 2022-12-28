@@ -181,7 +181,7 @@ namespace PX.Objects.AR
 
             if (custNoteID != null && Base.CurrentDocument.Current?.DocType == ARDocType.Prepayment)
             {
-                var value = CS.CSAnswers.PK.Find(Base, custNoteID, PRINTPREPA_Attr)?.Value;
+                var value = GetCustomPrintPrepayAttr(Base, custNoteID);//CS.CSAnswers.PK.Find(Base, custNoteID, PRINTPREPA_Attr)?.Value;
 
                 e.NewValue = Convert.ToBoolean(Convert.ToInt32(value)) == true ? CS.CSAnswers.PK.Find(Base, custNoteID, ARRegisterExt.VATOUTFRMTName)?.Value : null;
             }
@@ -199,6 +199,13 @@ namespace PX.Objects.AR
                                      .Where<CR.Location.bAccountID.IsEqual<@P.AsInt>>.View.SelectSingleBound(Base, null, row.CustomerID);
 
             e.NewValue = tax?.GetExtension<TaxExt>().UsrGUIType;
+        }
+        #endregion
+
+        #region Static Methods
+        public static bool GetCustomPrintPrepayAttr(PXGraph graph, Guid? customerNoteID)
+        {
+            return Convert.ToBoolean(Convert.ToInt32(CS.CSAnswers.PK.Find(graph, customerNoteID, PRINTPREPA_Attr)?.Value ?? "0"));
         }
         #endregion
     }

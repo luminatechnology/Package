@@ -108,6 +108,8 @@ namespace PX.Objects.AR
                     CreatGUI:
                         if (docExt.UsrCreditAction.IsIn(TWNStringList.TWNCreditAction.CN, TWNStringList.TWNCreditAction.NO))
                         {
+                            Customer customer = Customer.PK.Find(Base, doc.CustomerID);
+
                             decimal? unpaidBalance = (doc as ARInvoice)?.CuryUnpaidBalance;
 
                             // Credit Note
@@ -120,7 +122,7 @@ namespace PX.Objects.AR
                                 remainTax = settledTax - remainTax;
                             }
                             // Invoice with prepayment
-                            else if ((unpaidBalance ?? 0m )> 0m)
+                            else if ((unpaidBalance ?? 0m ) > 0m && ARPaymentEntry_Extension.GetCustomPrintPrepayAttr(Base, customer?.NoteID) == true)
                             {
                                 settledNet = Math.Round(unpaidBalance.Value / 1.05m, 0, MidpointRounding.AwayFromZero);
                                 settledTax = unpaidBalance - settledNet;
@@ -131,8 +133,6 @@ namespace PX.Objects.AR
                                 settledNet = remainNet;
                                 settledTax = remainTax;
                             }
-
-                            Customer customer = Customer.PK.Find(Base, doc.CustomerID);
 
                             Tuple<string, string, string> tuple = GetB2CTypeValue(!string.IsNullOrEmpty(docExt.UsrTaxNbr), docExt.UsrCarrierID, docExt.UsrNPONbr);
 
