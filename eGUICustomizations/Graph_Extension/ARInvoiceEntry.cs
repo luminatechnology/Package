@@ -66,8 +66,6 @@ namespace PX.Objects.AR
 
             ARRegisterExt registerExt = e.Row.GetExtension<ARRegisterExt>();
 
-            //BuyPlasticBag.SetVisible(activateGUI);
-
             PXUIFieldAttribute.SetVisible<ARRegisterExt.usrGUIDate>(e.Cache, null, activateGUI);
             PXUIFieldAttribute.SetVisible<ARRegisterExt.usrGUINbr>(e.Cache, null, activateGUI);
             PXUIFieldAttribute.SetVisible<ARRegisterExt.usrOurTaxNbr>(e.Cache, null, activateGUI);
@@ -133,7 +131,7 @@ namespace PX.Objects.AR
                 {
                     case TWGUIFormatCode.vATOutCode31:
                     case TWGUIFormatCode.vATOutCode35:
-                        registerExt.UsrVATOutCode = TWGUIFormatCode.vATOutCode33;
+                        registerExt.UsrVATOutCode   = TWGUIFormatCode.vATOutCode33;
                         break;
 
                     case TWGUIFormatCode.vATOutCode32:
@@ -141,11 +139,13 @@ namespace PX.Objects.AR
                         break;
                 }
 
-                registerExt.UsrCreditAction = TWNStringList.TWNCreditAction.CN;
+                registerExt.UsrCreditAction = TWNStringList.TWNCreditAction.VG;
+                registerExt.UsrB2CType      = TWNStringList.TWNB2CType.DEF;
+                registerExt.UsrCarrierID    = registerExt.UsrNPONbr = null;
             }
         }
 
-        protected virtual void _(Events.FieldUpdated<ARInvoice.customerID> e, PXFieldUpdated baseHandler)
+        protected void _(Events.FieldUpdated<ARInvoice.customerID> e, PXFieldUpdated baseHandler)
         {
             baseHandler?.Invoke(e.Cache, e.Args);
 
@@ -156,6 +156,8 @@ namespace PX.Objects.AR
                 if (row.DocType == ARDocType.CreditMemo)
                 {
                     vATInCode = TWGUIFormatCode.vATOutCode33;
+
+                    e.Cache.SetValue<ARRegisterExt.usrCreditAction>(row, TWNStringList.TWNCreditAction.VG);
                 }
                 else if (row.DocType.IsIn(ARDocType.Invoice, ARDocType.CashSale))
                 {
@@ -172,7 +174,7 @@ namespace PX.Objects.AR
             {
                 var row = e.Row as ARInvoice;
 
-                if (row.CuryDocBal != decimal.Zero && string.IsNullOrEmpty(row.GetExtension<ARRegisterExt>().UsrVATOutCode))
+                if (row.CuryDocBal != decimal.Zero && string.IsNullOrEmpty(row.GetExtension<ARRegisterExt>().UsrVATOutCode) && row.CuryTaxTotal > 0m)
                 {
                     Base.Document.Ask(TWMessages.RemindHeader, TWMessages.ReminderMesg, MessageButtons.OKCancel);
 

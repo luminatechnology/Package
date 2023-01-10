@@ -1,0 +1,20 @@
+﻿<Page path="~/pages/tx/tx206000.aspx" ControlId="2" pageSource="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">
+    <PXFormView ID="form" ParentId="phF_form" TypeFullName="PX.Web.UI.PXFormView">
+        <Children Key="Template">
+            <AddItem>
+                <PXLayoutRule TypeFullName="PX.Web.UI.PXLayoutRule">
+                    <Prop Key="Virtual:ApplyStylesheetSkin" />
+                    <Prop Key="ID" Value="CstPXLayoutRule1" />
+                    <Prop Key="StartColumn" Value="True" />
+                </PXLayoutRule>
+            </AddItem>
+            <AddItem>
+                <PXCheckBox TypeFullName="PX.Web.UI.PXCheckBox">
+                    <Prop Key="Virtual:ApplyStylesheetSkin" />
+                    <Prop Key="ID" Value="CstPXCheckBox2" />
+                    <Prop Key="DataField" Value="UsrWHTTaxRelated" />
+                </PXCheckBox>
+            </AddItem>
+        </Children>
+    </PXFormView>
+</Page>

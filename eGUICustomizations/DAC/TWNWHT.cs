@@ -21,7 +21,7 @@ namespace eGUICustomizations.DAC
         /// </remarks>
         [PXDBString(10/*, IsKey = true*/, IsUnicode = true)]
         [PXUIField(DisplayName = "Personal ID")]
-        [PXDefault(PersistingCheck = PXPersistingCheck.Nothing)]
+        [PXDefault()]
         public virtual string PersonalID { get; set; }
         public abstract class personalID : PX.Data.BQL.BqlString.Field<personalID> { }
         #endregion
@@ -130,19 +130,17 @@ namespace eGUICustomizations.DAC
         #region SecNHIPct
         [PXDBDecimal()]
         [PXUIField(DisplayName = "2GNHI %")]
-        [PXDefault(typeof(Search<TWNGUIPreferences.secGenerationNHIPct>), PersistingCheck = PXPersistingCheck.Nothing)]
+        //[PXDefault(typeof(Search<TWNGUIPreferences.secGenerationNHIPct>), PersistingCheck = PXPersistingCheck.Nothing)]
         public virtual decimal? SecNHIPct { get; set; }
         public abstract class secNHIPct : PX.Data.BQL.BqlDecimal.Field<secNHIPct> { }
         #endregion
 
         #region SecNHICode
-        public const string SecNHICodeName = "SECNHICode";
+        public const string SecNHICodeName = "SECNHICODE";
         public class SecNHICodeAtt : PX.Data.BQL.BqlString.Constant<SecNHICodeAtt>
         {
             public SecNHICodeAtt() : base(SecNHICodeName) { }
         }
-
-
         [PXDBString(2, IsFixed = true, InputMask = "")]
         [PXUIField(DisplayName = "2GNHI Code")]
         //[PXDefault(typeof(Search<CSAnswers.value, Where<CSAnswers.refNoteID, Equal<Current<Vendor.noteID>>,

@@ -39,7 +39,9 @@ namespace PX.Objects.AR
                 doc.Released == true &&
                 doc.DocType.IsIn(ARDocType.Invoice, ARDocType.CreditMemo, ARDocType.CashSale, ARDocType.Prepayment) &&
                 ((string.IsNullOrEmpty(docExt.UsrGUINbr) && docExt.UsrVATOutCode == TWGUIFormatCode.vATOutCode36) || !string.IsNullOrEmpty(docExt.UsrVATOutCode)) &&
-                doc.OpenDoc == true)
+                // Cach sale won't have shipment, standard will close Invoice And Clear Balances.
+                (doc.OpenDoc == true || (doc.OpenDoc == false && doc.DocType == ARDocType.CashSale))
+                )
             {
                 if (docExt.UsrVATOutCode.IsIn(TWGUIFormatCode.vATOutCode33, TWGUIFormatCode.vATOutCode34) &&
                     docExt.UsrCreditAction == TWNStringList.TWNCreditAction.NO)
@@ -92,7 +94,7 @@ namespace PX.Objects.AR
                         string gUINbr = gUINbrs[i].TrimStart();
 
                         // Avoid standard logic calling this method twice and inserting duplicate records into TWNGUITrans.
-                        if (APReleaseProcess_Extension.CountExistedRec(Base, gUINbr, docExt.UsrVATOutCode, doc.RefNbr) > 0) { return; }
+                        if (APReleaseProcess_Extension.CountExistedRec(Base, gUINbr, docExt.UsrVATOutCode, doc.RefNbr) > 0) { continue; }
 
                         TWNGUITrans tWNGUITrans = rp.InitAndCheckOnAR(gUINbr, docExt.UsrVATOutCode);
 
@@ -106,6 +108,11 @@ namespace PX.Objects.AR
                     CreatGUI:
                         if (docExt.UsrCreditAction.IsIn(TWNStringList.TWNCreditAction.CN, TWNStringList.TWNCreditAction.NO))
                         {
+                            Customer customer = Customer.PK.Find(Base, doc.CustomerID);
+
+                            decimal? unpaidBalance = (doc as ARInvoice)?.CuryUnpaidBalance;
+
+                            // Credit Note
                             if (tWNGUITrans != null)
                             {
                                 settledNet = (tWNGUITrans.NetAmtRemain < remainNet) ? tWNGUITrans.NetAmtRemain : remainNet;
@@ -114,13 +121,18 @@ namespace PX.Objects.AR
                                 remainNet = settledNet - remainNet;
                                 remainTax = settledTax - remainTax;
                             }
+                            // Invoice with prepayment
+                            else if ((unpaidBalance ?? 0m ) > 0m && ARPaymentEntry_Extension.GetCustomPrintPrepayAttr(Base, customer?.NoteID) == true)
+                            {
+                                settledNet = Math.Round(unpaidBalance.Value / 1.05m, 0, MidpointRounding.AwayFromZero);
+                                settledTax = unpaidBalance - settledNet;
+                            }
+                            // Invoice
                             else
                             {
                                 settledNet = remainNet;
                                 settledTax = remainTax;
                             }
-
-                            Customer customer = Customer.PK.Find(Base, doc.CustomerID);
 
                             Tuple<string, string, string> tuple = GetB2CTypeValue(!string.IsNullOrEmpty(docExt.UsrTaxNbr), docExt.UsrCarrierID, docExt.UsrNPONbr);
 
@@ -132,7 +144,7 @@ namespace PX.Objects.AR
                                 BranchID      = doc.BranchID,
                                 GUIDirection  = TWNStringList.TWNGUIDirection.Issue,
                                 GUIDate       = docExt.UsrGUIDate.Value.Date.Add(doc.CreatedDateTime.Value.TimeOfDay),
-                                GUITitle      = docExt.UsrGUITitle ?? ARContact.PK.Find(Base, (doc as ARInvoice).BillContactID)?.FullName, // As David's email [GUI Form Adjustment] # 6
+                                GUITitle      = docExt.UsrGUITitle ?? ARContact.PK.Find(Base, (doc as ARInvoice)?.BillContactID)?.FullName, // As David's email [GUI Form Adjustment] # 6
                                 TaxZoneID     = taxZoneID,
                                 TaxCategoryID = taxCateID,
                                 TaxID         = taxID,
@@ -142,7 +154,7 @@ namespace PX.Objects.AR
                                 TaxAmount     = settledTax < 0 ? 0 : settledTax,
                                 AcctCD        = customer.AcctCD,
                                 AcctName      = customer.AcctName,
-                                Remark        = doc.DocDesc,//(appointment is null) ? string.Empty : appointment.RefNbr,
+                                Remark        = doc.DocDesc,
                                 BatchNbr      = doc.BatchNbr,
                                 DocType       = doc.DocType,
                                 OrderNbr      = doc.RefNbr,
@@ -152,42 +164,42 @@ namespace PX.Objects.AR
                                 B2CPrinted    = docExt.UsrB2CType == TWNStringList.TWNB2CType.DEF && string.IsNullOrEmpty(docExt.UsrTaxNbr),
                             });
 
-                            #region Prepayment Adjust
-                            decimal? adjustNetTol = null, adjustTaxTol = null;
+                            //#region Prepayment Adjust
+                            //decimal? adjustNetTol = null, adjustTaxTol = null;
 
-                            foreach (ARAdjust adjust in Base.ARAdjust_AdjdDocType_RefNbr_CustomerID.Cache.Cached)
-                            {
-                                string prepayGUINbr = ARRegister.PK.Find(Base, adjust.AdjgDocType, adjust.AdjgRefNbr).GetExtension<ARRegisterExt>().UsrGUINbr;
+                            //foreach (ARAdjust adjust in Base.ARAdjust_AdjdDocType_RefNbr_CustomerID.Cache.Cached)
+                            //{
+                            //    string prepayGUINbr = ARRegister.PK.Find(Base, adjust.AdjgDocType, adjust.AdjgRefNbr).GetExtension<ARRegisterExt>().UsrGUINbr;
 
-                                decimal adjustNet = PXDBCurrencyAttribute.BaseRound(Base, (adjust.CuryAdjdAmt / (1 + taxRate)).Value);
-                                decimal adjustTax = PXDBCurrencyAttribute.BaseRound(Base, (adjust.CuryAdjdAmt - adjustNet).Value);
+                            //    decimal adjustNet = PXDBCurrencyAttribute.BaseRound(Base, (adjust.CuryAdjdAmt / (1 + taxRate)).Value);
+                            //    decimal adjustTax = PXDBCurrencyAttribute.BaseRound(Base, (adjust.CuryAdjdAmt - adjustNet).Value);
 
-                                foreach (var keyValues in GetGUIPrepayAdjustAmounts(prepayGUINbr, adjustNet, adjustTax))
-                                {
-                                    rp.CreateGUIPrepayAdjust(false, Tuple.Create<string, int?, decimal?, decimal?, decimal?, decimal?>(prepayGUINbr, 0, -adjustNet, -adjustTax, keyValues.Value.Item1, keyValues.Value.Item2));
+                            //    foreach (var keyValues in GetGUIPrepayAdjustAmounts(prepayGUINbr, adjustNet, adjustTax))
+                            //    {
+                            //        rp.CreateGUIPrepayAdjust(false, Tuple.Create<string, int?, decimal?, decimal?, decimal?, decimal?>(prepayGUINbr, 0, -adjustNet, -adjustTax, keyValues.Value.Item1, keyValues.Value.Item2));
 
-                                    adjustNetTol = (adjustNetTol ?? 0m) + adjustNet;
-                                    adjustTaxTol = (adjustTaxTol ?? 0m) + adjustTax;
-                                }
-                            }
+                            //        adjustNetTol = (adjustNetTol ?? 0m) + adjustNet;
+                            //        adjustTaxTol = (adjustTaxTol ?? 0m) + adjustTax;
+                            //    }
+                            //}
 
-                            if (adjustNetTol != null)
-                            {
-                                var gUITran = rp.ViewGUITrans.Current;
+                            //if (adjustNetTol != null)
+                            //{
+                            //    var gUITran = rp.ViewGUITrans.Current;
 
-                                rp.ViewGUITrans.Cache.SetValue<TWNGUITrans.netAmount>(gUITran, gUITran.NetAmount - adjustNetTol);
-                                rp.ViewGUITrans.Cache.SetValue<TWNGUITrans.taxAmount>(gUITran, gUITran.TaxAmount - adjustTaxTol);
-                                rp.ViewGUITrans.Cache.SetValue<TWNGUITrans.netAmtRemain>(gUITran, gUITran.NetAmtRemain - adjustNetTol);
-                                rp.ViewGUITrans.Cache.SetValue<TWNGUITrans.taxAmtRemain>(gUITran, gUITran.TaxAmtRemain -  adjustTaxTol);
+                            //    rp.ViewGUITrans.Cache.SetValue<TWNGUITrans.netAmount>(gUITran, gUITran.NetAmount - adjustNetTol);
+                            //    rp.ViewGUITrans.Cache.SetValue<TWNGUITrans.taxAmount>(gUITran, gUITran.TaxAmount - adjustTaxTol);
+                            //    rp.ViewGUITrans.Cache.SetValue<TWNGUITrans.netAmtRemain>(gUITran, gUITran.NetAmtRemain - adjustNetTol);
+                            //    rp.ViewGUITrans.Cache.SetValue<TWNGUITrans.taxAmtRemain>(gUITran, gUITran.TaxAmtRemain -  adjustTaxTol);
 
-                                rp.ViewGUITrans.UpdateCurrent();
-                            }
+                            //    rp.ViewGUITrans.UpdateCurrent();
+                            //}
 
-                            if (doc.DocType == ARDocType.Prepayment)
-                            {
-                                rp.CreateGUIPrepayAdjust();
-                            }
-                            #endregion
+                            //if (doc.DocType == ARDocType.Prepayment)
+                            //{
+                            //    rp.CreateGUIPrepayAdjust();
+                            //}
+                            //#endregion
                         }
 
                         #region GUI Tran Credit Action
@@ -210,27 +222,27 @@ namespace PX.Objects.AR
                         }
                         #endregion
 
-                        #region GUI Prepay Credit Action
-                        if (doc.DocType == ARDocType.CreditMemo && docExt.UsrCreditAction.IsIn(TWNStringList.TWNCreditAction.CN, TWNStringList.TWNCreditAction.VG) && doc.ReleasedToVerify != null)
-                        {
-                            bool isVoided = docExt.UsrCreditAction == TWNStringList.TWNCreditAction.VG;
+                        //#region GUI Prepay Credit Action
+                        //if (doc.DocType == ARDocType.CreditMemo && docExt.UsrCreditAction.IsIn(TWNStringList.TWNCreditAction.CN, TWNStringList.TWNCreditAction.VG) && doc.ReleasedToVerify != null)
+                        //{
+                        //    bool isVoided = docExt.UsrCreditAction == TWNStringList.TWNCreditAction.VG;
 
-                            decimal taxable = (doc as ARInvoice).CuryVatTaxableTotal.Value;
-                            decimal taxTotl = (doc as ARInvoice).CuryTaxTotal.Value;
+                        //    decimal taxable = (doc as ARInvoice).CuryVatTaxableTotal.Value;
+                        //    decimal taxTotl = (doc as ARInvoice).CuryTaxTotal.Value;
 
-                            foreach (var keyValues in GetGUIPrepayAdjustAmounts(gUINbr, taxable, taxTotl, isVoided) )
-                            {
-                                if (keyValues.Value.Item3 == null && isVoided == true) { continue; }
+                        //    foreach (var keyValues in GetGUIPrepayAdjustAmounts(gUINbr, taxable, taxTotl, isVoided) )
+                        //    {
+                        //        if (keyValues.Value.Item3 == null && isVoided == true) { continue; }
 
-                                rp.CreateGUIPrepayAdjust(false, Tuple.Create<string, int?, decimal?, decimal?, decimal?, decimal?>(keyValues.Key,//gUINbr,
-                                                                                                                                   isVoided == false ? (keyValues.Value.Item3 ?? 0) + 1 : keyValues.Value.Item3,
-                                                                                                                                   isVoided == false ? -taxable : keyValues.Value.Item1,
-                                                                                                                                   isVoided == false ? -taxTotl : keyValues.Value.Item2,
-                                                                                                                                   Math.Abs(keyValues.Value.Item1),
-                                                                                                                                   Math.Abs(keyValues.Value.Item2)) );
-                            }
-                        }
-                        #endregion
+                        //        rp.CreateGUIPrepayAdjust(false, Tuple.Create<string, int?, decimal?, decimal?, decimal?, decimal?>(keyValues.Key,//gUINbr,
+                        //                                                                                                           isVoided == false ? (keyValues.Value.Item3 ?? 0) + 1 : keyValues.Value.Item3,
+                        //                                                                                                           isVoided == false ? -taxable : keyValues.Value.Item1,
+                        //                                                                                                           isVoided == false ? -taxTotl : keyValues.Value.Item2,
+                        //                                                                                                           Math.Abs(keyValues.Value.Item1),
+                        //                                                                                                           Math.Abs(keyValues.Value.Item2)) );
+                        //    }
+                        //}
+                        //#endregion
                     }
 
                     // Manually Saving as base code will not call base graph persist.
@@ -306,43 +318,43 @@ namespace PX.Objects.AR
             return Tuple.Create(taxZoneID, taxID, taxCateID, remainNet, remainTax);
         }
 
-        public Dictionary<string, ValueTuple<decimal, decimal, int?>> GetGUIPrepayAdjustAmounts(string gUINbr, decimal adjustNet, decimal adjustTax, bool isVoided = false)
-        {
-            Dictionary<string, ValueTuple<decimal, decimal, int?>> dic = new Dictionary<string, (decimal, decimal, int?)>();
+        //public Dictionary<string, ValueTuple<decimal, decimal, int?>> GetGUIPrepayAdjustAmounts(string gUINbr, decimal adjustNet, decimal adjustTax, bool isVoided = false)
+        //{
+        //    Dictionary<string, ValueTuple<decimal, decimal, int?>> dic = new Dictionary<string, (decimal, decimal, int?)>();
 
-            if (isVoided == false)
-            {
-                TWNGUIPrepayAdjust prepay = SelectFrom<TWNGUIPrepayAdjust>.Where<TWNGUIPrepayAdjust.prepayGUINbr.IsEqual<@P.AsString>>
-                                                       .OrderBy<TWNGUIPrepayAdjust.createdDateTime.Desc>.View.SelectSingleBound(Base, null, gUINbr);
+        //    if (isVoided == false)
+        //    {
+        //        TWNGUIPrepayAdjust prepay = SelectFrom<TWNGUIPrepayAdjust>.Where<TWNGUIPrepayAdjust.prepayGUINbr.IsEqual<@P.AsString>>
+        //                                               .OrderBy<TWNGUIPrepayAdjust.createdDateTime.Desc>.View.SelectSingleBound(Base, null, gUINbr);
 
-                if (prepay != null)
-                {
-                    decimal remainNet = prepay.NetAmtUnapplied ?? 0m;
-                    decimal remainTax = prepay.TaxAmtUnapplied ?? 0m;
+        //        if (prepay != null)
+        //        {
+        //            decimal remainNet = prepay.NetAmtUnapplied ?? 0m;
+        //            decimal remainTax = prepay.TaxAmtUnapplied ?? 0m;
 
-                    if (remainNet + remainTax < adjustNet + adjustTax) { throw new PXException(TWMessages.InsufPrepayCN); }
+        //            if (remainNet + remainTax < adjustNet + adjustTax) { throw new PXException(TWMessages.InsufPrepayCN); }
 
-                    decimal settleNet = (remainNet + remainTax > adjustNet + adjustTax) ? remainNet - adjustNet : decimal.Zero;
-                    decimal settleTax = (remainNet + remainTax > adjustNet + adjustTax) ? remainTax - adjustTax : decimal.Zero;
+        //            decimal settleNet = (remainNet + remainTax > adjustNet + adjustTax) ? remainNet - adjustNet : decimal.Zero;
+        //            decimal settleTax = (remainNet + remainTax > adjustNet + adjustTax) ? remainTax - adjustTax : decimal.Zero;
 
-                    dic.Add(prepay.PrepayGUINbr, ValueTuple.Create(settleNet, settleTax, prepay.SequenceNo));
-                }
-            }
-            else
-            {
-                foreach (TWNGUIPrepayAdjust applied in SelectFrom<TWNGUIPrepayAdjust>.Where<TWNGUIPrepayAdjust.appliedGUINbr.IsEqual<@P.AsString>
-                                                                                            .And<TWNGUIPrepayAdjust.reason.IsEqual<TWNStringList.TWNGUIStatus.used>>
-                                                                                                .And<TWNGUIPrepayAdjust.sequenceNo.IsEqual<CS.int0>>>.View.Select(Base, gUINbr))
-                {
-                    decimal settleNet = (applied.NetAmtUnapplied ?? 0m) + (applied.NetAmt ?? 0m);
-                    decimal settleTax = (applied.TaxAmtUnapplied ?? 0m) + (applied.TaxAmt ?? 0m);
+        //            dic.Add(prepay.PrepayGUINbr, ValueTuple.Create(settleNet, settleTax, prepay.SequenceNo));
+        //        }
+        //    }
+        //    else
+        //    {
+        //        foreach (TWNGUIPrepayAdjust applied in SelectFrom<TWNGUIPrepayAdjust>.Where<TWNGUIPrepayAdjust.appliedGUINbr.IsEqual<@P.AsString>
+        //                                                                                    .And<TWNGUIPrepayAdjust.reason.IsEqual<TWNStringList.TWNGUIStatus.used>>
+        //                                                                                        .And<TWNGUIPrepayAdjust.sequenceNo.IsEqual<CS.int0>>>.View.Select(Base, gUINbr))
+        //        {
+        //            decimal settleNet = (applied.NetAmtUnapplied ?? 0m) + (applied.NetAmt ?? 0m);
+        //            decimal settleTax = (applied.TaxAmtUnapplied ?? 0m) + (applied.TaxAmt ?? 0m);
 
-                    dic.Add(applied.PrepayGUINbr, ValueTuple.Create(settleNet, settleTax, applied.SequenceNo));
-                }
-            }
+        //            dic.Add(applied.PrepayGUINbr, ValueTuple.Create(settleNet, settleTax, applied.SequenceNo));
+        //        }
+        //    }
 
-            return dic;
-        }
+        //    return dic;
+        //}
         #endregion
     }
 }

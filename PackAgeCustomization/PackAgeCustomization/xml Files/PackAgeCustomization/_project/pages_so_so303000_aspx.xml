@@ -3,11 +3,22 @@
         <Children Key="Columns">
             <AddItem>
                 <PXGridColumn TypeFullName="PX.Web.UI.PXGridColumn">
-                    <Prop Key="DataField" Value="SOOrder__OrderDate" />
-                    <Prop Key="Width" Value="90" />
+                    <Prop Key="DataField" Value="UsrCustomerOrderNbr" />
+                    <Prop Key="Width" Value="180" />
                 </PXGridColumn>
             </AddItem>
             <PXGridColumn DataField="ShipmentNbr" OriginalIndex="3" />
+        </Children>
+    </PXGridLevel>
+    <PXGridLevel DataMember="soLineList" ParentId="phG_PanelAddSOLine_gridSOLineList_Levels#0" TypeFullName="PX.Web.UI.PXGridLevel">
+        <Children Key="Columns">
+            <AddItem>
+                <PXGridColumn TypeFullName="PX.Web.UI.PXGridColumn">
+                    <Prop Key="DataField" Value="UsrCustomerOrderNbr" />
+                    <Prop Key="Width" Value="180" />
+                </PXGridColumn>
+            </AddItem>
+            <PXGridColumn DataField="CustomerID" OriginalIndex="3" />
         </Children>
     </PXGridLevel>
 </Page>

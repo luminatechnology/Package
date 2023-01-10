@@ -1,5 +1,5 @@
 ﻿<Report Name="tw641000.rpx">
-    <Report version="20201103" Name="report1">
+    <Report version="20211215" Name="report1">
         <CommonSettings>
             <ViewPdf>True</ViewPdf>
         </CommonSettings>
@@ -208,7 +208,7 @@ F3ORVxDI/lqUX6HdJRFAAAEEEDhDIBeNM1NNQWAPgeyvRXkPV6cggAACCCCAwL8J5KIBCgI3Ecj+WpRv
                 <ParentName>ARInvoice</ParentName>
             </ReportRelation>
         </Relations>
-        <SchemaUrl>http://localhost/Cottingham</SchemaUrl>
+        <SchemaUrl>http://localhost/Package</SchemaUrl>
         <Tables>
             <ReportTable Name="ARAddress">
                 <Fields>
@@ -3931,7 +3931,7 @@ F3ORVxDI/lqUX6HdJRFAAAEEEDhDIBeNM1NNQWAPgeyvRXkPV6cggAACCCCAwL8J5KIBCgI3Ecj+WpRv
                             <TextAlign>Left</TextAlign>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>=IIf([ARTran.InventoryID]&lt;&gt;Null, Format( '{0}: {1}', [ARTran.InventoryID],[ARTran.TranDesc]),[ARTran.TranDesc])</Value>
+                        <Value>=[ARTran.TranDesc]</Value>
                     </TextBox>
                     <TextBox Name="textBox33">
                         <Location>2in, 0cm</Location>
@@ -3988,7 +3988,7 @@ F3ORVxDI/lqUX6HdJRFAAAEEEDhDIBeNM1NNQWAPgeyvRXkPV6cggAACCCCAwL8J5KIBCgI3Ecj+WpRv
                             </Font>
                             <VerticalAlign>Middle</VerticalAlign>
                         </Style>
-                        <Value>=IIf([ARTran.LineNbr] &lt;= 1, [TWNGUITrans.Remark], '')</Value>
+                        <Value>=''/*IIf([ARTran.LineNbr] &lt;= 1, [TWNGUITrans.Remark], '')*/</Value>
                     </TextBox>
                 </Items>
             </Detail>

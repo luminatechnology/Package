@@ -15,6 +15,21 @@ namespace PX.Objects.EP
                          .Where<TWNManualGUIExpense.refNbr.IsEqual<EPExpenseClaim.refNbr.FromCurrent>>.View manGUIExpense;
         #endregion
 
+        #region Override Method
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            PXCache<AP.Vendor> vendor = new PXCache<AP.Vendor>(Base);
+
+            Base.Caches[typeof(AP.Vendor)] = vendor;
+
+            PXCache<EPEmployee> employee = new PXCache<EPEmployee>(Base);
+
+            Base.Caches[typeof(EPEmployee)] = employee;
+        }
+        #endregion
+
         #region Static Methods
         public static bool IsActive() => TWNGUIValidation.ActivateTWGUI(new PXGraph());
         #endregion
@@ -34,7 +49,7 @@ namespace PX.Objects.EP
         {
             baseHandler?.Invoke(e.Cache, e.Args);
 
-            if (Base.ExpenseClaimCurrent.Current != null)
+            if (e.Row != null)
             {
                 decimal taxSum = 0;
 
@@ -44,15 +59,15 @@ namespace PX.Objects.EP
 
                     if (tWNGUIValidation.errorOccurred.Equals(true))
                     {
-                        e.Cache.RaiseExceptionHandling<TWNManualGUIExpense.gUINbr>(e.Row, row.GUINbr, new PXSetPropertyException(tWNGUIValidation.errorMessage, PXErrorLevel.RowError));
+                        manGUIExpense.Cache.RaiseExceptionHandling<TWNManualGUIExpense.gUINbr>(row, row.GUINbr, new PXSetPropertyException(tWNGUIValidation.errorMessage, PXErrorLevel.RowError));
                     }
 
                     taxSum += row.TaxAmt.Value;
                 }
 
-                if (!taxSum.Equals(Base.ExpenseClaimCurrent.Current.TaxTotal))
+                if (taxSum != 0m && !taxSum.Equals(e.Row.TaxTotal))
                 {
-                    throw new PXException(TWMessages.ChkTotalGUIAmt);
+                    manGUIExpense.Cache.RaiseExceptionHandling<TWNManualGUIExpense.taxAmt>(manGUIExpense.Current, taxSum, new PXSetPropertyException(TWMessages.ChkTotalGUIAmt));
                 }
             }
         }

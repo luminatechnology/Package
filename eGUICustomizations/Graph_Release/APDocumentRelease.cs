@@ -33,10 +33,6 @@ namespace PX.Objects.AP
                 doc.Released == true &&
                 doc.DocType.IsIn(APDocType.Invoice, APDocType.DebitAdj) )
             {
-                //if (Base.APTaxTran_TranType_RefNbr.Current == null)
-                //{
-                //    throw new PXException(TWMessages.NoInvTaxDtls);
-                //}
                 TWNReleaseProcess rp = PXGraph.CreateInstance<TWNReleaseProcess>();
 
                 foreach (TWNManualGUIAPBill row in SelectFrom<TWNManualGUIAPBill>.Where<TWNManualGUIAPBill.docType.IsEqual<@P.AsString>

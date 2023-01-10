@@ -65,36 +65,36 @@ namespace eGUICustomizations.Graph_Release
             this.Actions.PressSave();
         }
 
-        public virtual void CreateGUIPrepayAdjust(bool create2Record = false, Tuple<string, int?, decimal?, decimal?, decimal?, decimal?> tuple = null)
-        {
-            TWNGUITrans trans = ViewGUITrans.Current;
+        //public virtual void CreateGUIPrepayAdjust(bool create2Record = false, Tuple<string, int?, decimal?, decimal?, decimal?, decimal?> tuple = null)
+        //{
+        //    TWNGUITrans trans = ViewGUITrans.Current;
 
-            TWNGUIPrepayAdjust prepay = PrepayAdjust.Cache.CreateInstance() as TWNGUIPrepayAdjust;
+        //    TWNGUIPrepayAdjust prepay = PrepayAdjust.Cache.CreateInstance() as TWNGUIPrepayAdjust;
 
-            prepay.AppliedGUINbr = trans.GUINbr;
-            prepay.PrepayGUINbr  = tuple?.Item1 ?? trans.GUINbr;
-            prepay.SequenceNo    = tuple?.Item2 ?? trans.SequenceNo;
-            prepay.Reason        = create2Record == false ? trans.GUIStatus : TWNStringList.TWNGUIStatus.Used;
+        //    prepay.AppliedGUINbr = trans.GUINbr;
+        //    prepay.PrepayGUINbr  = tuple?.Item1 ?? trans.GUINbr;
+        //    prepay.SequenceNo    = tuple?.Item2 ?? trans.SequenceNo;
+        //    prepay.Reason        = create2Record == false ? trans.GUIStatus : TWNStringList.TWNGUIStatus.Used;
 
-            prepay = PrepayAdjust.Insert(prepay);
+        //    prepay = PrepayAdjust.Insert(prepay);
 
-            decimal? netAmt = tuple?.Item3 ?? trans.NetAmount;
-            decimal? taxAmt = tuple?.Item4 ?? trans.TaxAmount;
+        //    decimal? netAmt = tuple?.Item3 ?? trans.NetAmount;
+        //    decimal? taxAmt = tuple?.Item4 ?? trans.TaxAmount;
 
-            prepay.NetAmt          = prepay.Reason != TWNStringList.TWNGUIStatus.Voided ? netAmt : -1 * netAmt;
-            prepay.TaxAmt          = prepay.Reason != TWNStringList.TWNGUIStatus.Voided ? taxAmt : -1 * taxAmt;
-            prepay.NetAmtUnapplied = tuple?.Item5 ?? netAmt;
-            prepay.TaxAmtUnapplied = tuple?.Item6 ?? taxAmt;
-            prepay.Remark          = trans.Remark;
+        //    prepay.NetAmt          = prepay.Reason != TWNStringList.TWNGUIStatus.Voided ? netAmt : -1 * netAmt;
+        //    prepay.TaxAmt          = prepay.Reason != TWNStringList.TWNGUIStatus.Voided ? taxAmt : -1 * taxAmt;
+        //    prepay.NetAmtUnapplied = tuple?.Item5 ?? netAmt;
+        //    prepay.TaxAmtUnapplied = tuple?.Item6 ?? taxAmt;
+        //    prepay.Remark          = trans.Remark;
 
-            PrepayAdjust.Update(prepay);
+        //    PrepayAdjust.Update(prepay);
 
-            this.Actions.PressSave();
-        }
+        //    this.Actions.PressSave();
+        //}
 
         public virtual void GenerateVoidedGUI(bool isDeleted, ARRegister register)
         {
-            int count = isDeleted == true ? 2 : 1;
+            //int count = isDeleted == true ? 2 : 1;
 
             ARRegisterExt regisExt = register.GetExtension<ARRegisterExt>();
 
@@ -102,7 +102,7 @@ namespace eGUICustomizations.Graph_Release
 
             using (PXTransactionScope ts = new PXTransactionScope())
             {
-                new TWNGUIValidation().VerifyGUIPrepayAdjust(this.PrepayAdjust.Cache, register);
+                //new TWNGUIValidation().VerifyGUIPrepayAdjust(this.PrepayAdjust.Cache, register);
 
                 TWNReleaseProcess rp = PXGraph.CreateInstance<TWNReleaseProcess>();
 
@@ -147,14 +147,14 @@ namespace eGUICustomizations.Graph_Release
                     rp.ViewGUITrans.UpdateCurrent();
                 }
 
-                for (int i = 1; i <= count; i++)
-                {
-                    bool isVoided = i != 2; // First reocrd is voided and the second one is used.
+                //for (int i = 1; i <= count; i++)
+                //{
+                //    bool isVoided = i != 2; // First reocrd is voided and the second one is used.
 
-                    rp.CreateGUIPrepayAdjust(isDeleted && !isVoided, Tuple.Create<string, int?, decimal?, decimal?, decimal?, decimal?>(null, null, null, null,
-                                                                                                                                        isVoided == true ? 0m : tuple.Item4 ,
-                                                                                                                                        isVoided == true ? 0m : tuple.Item5));
-                }
+                //    rp.CreateGUIPrepayAdjust(isDeleted && !isVoided, Tuple.Create<string, int?, decimal?, decimal?, decimal?, decimal?>(null, null, null, null,
+                //                                                                                                                        isVoided == true ? 0m : tuple.Item4 ,
+                //                                                                                                                        isVoided == true ? 0m : tuple.Item5));
+                //}
 
                 ts.Complete();
             }
@@ -244,11 +244,14 @@ namespace eGUICustomizations.Graph_Release
         #endregion
     }
 
+    #region Interface
     public interface ITWNGUITran
     {
         int SequenceNo { get; set; }
     }
+    #endregion
 
+    #region Struct
     public struct STWNGUITran
     {
         public string VATCode;
@@ -284,13 +287,6 @@ namespace eGUICustomizations.Graph_Release
 
         public decimal? NetAmount;
         public decimal? TaxAmount;
-
-        //public STWNGUITran(string a, string b, string c, string d )
-        //{
-        //    VATCode = a;
-        //    GUINbr = b;
-        //    GUIDirection = c;
-        //    GUIStatus = d;
-        //}
     }
+    #endregion
 }
