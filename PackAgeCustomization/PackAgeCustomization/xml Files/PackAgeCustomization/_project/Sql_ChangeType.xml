@@ -1,0 +1,5 @@
+﻿<Sql TableName="ChangeType" SqlScriptPriority="10" CustomScript="#CDATA">
+    <CDATA name="CustomScript"><![CDATA[ALTER TABLE EMailAccount
+ALTER COLUMN AccountDisplayName nvarchar(100)
+GO]]></CDATA>
+</Sql>
