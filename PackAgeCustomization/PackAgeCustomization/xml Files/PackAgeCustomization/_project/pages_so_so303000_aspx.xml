@@ -3,6 +3,12 @@
         <Children Key="Columns">
             <AddItem>
                 <PXGridColumn TypeFullName="PX.Web.UI.PXGridColumn">
+                    <Prop Key="DataField" Value="SOOrder__OrderDate" />
+                    <Prop Key="Width" Value="90" />
+                </PXGridColumn>
+            </AddItem>
+            <AddItem>
+                <PXGridColumn TypeFullName="PX.Web.UI.PXGridColumn">
                     <Prop Key="DataField" Value="UsrCustomerOrderNbr" />
                     <Prop Key="Width" Value="180" />
                 </PXGridColumn>

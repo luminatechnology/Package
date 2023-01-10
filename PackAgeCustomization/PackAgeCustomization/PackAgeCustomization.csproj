@@ -33,7 +33,7 @@
   <ItemGroup>
     <Reference Include="eGUICustomizations, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Bin\eGUICustomizations.dll</HintPath>
+      <HintPath>..\..\eGUICustomizations\obj\Debug\eGUICustomizations.dll</HintPath>
     </Reference>
     <Reference Include="PX.Common">
       <HintPath>..\..\..\..\Bin\PX.Common.dll</HintPath>
@@ -69,8 +69,7 @@
     <Compile Include="Graph_Extensions\ARPaymentEntry.cs" />
     <Compile Include="Graph_Extensions\ARSetupMaint.cs" />
     <Compile Include="Graph_Extensions\CustomerMaint.cs" />
-    <Compile Include="Examples.cs" />
-    <Compile Include="GraphExtension\SOInvoiceEntryExtension.cs" />
+    <Compile Include="Graph_Extensions\SOInvoiceEntryExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
