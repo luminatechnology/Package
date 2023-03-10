@@ -47,7 +47,7 @@ namespace eGUICustomizations.DAC
         #endregion
 
         #region GUINbr
-        [GUINumber(14, IsUnicode = true, InputMask = ">aaaaaaaaaaaaaa")]
+        [GUINumber(15, IsUnicode = true, InputMask = ">aaaaaaaaaaaaaa")]
         [PXUIField(DisplayName = "GUI Nbr")]
         [PXDefault()]
         public virtual string GUINbr { get; set; }
