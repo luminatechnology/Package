@@ -8,6 +8,7 @@ using PX.Objects.CS;
 using eGUICustomizations.DAC;
 using eGUICustomizations.Descriptor;
 using eGUICustomizations.Graph_Release;
+using static eGUICustomizations.Descriptor.TWNStringList;
 
 namespace PX.Objects.AR
 {
@@ -132,6 +133,7 @@ namespace PX.Objects.AR
                     case TWGUIFormatCode.vATOutCode31:
                     case TWGUIFormatCode.vATOutCode35:
                         registerExt.UsrVATOutCode   = TWGUIFormatCode.vATOutCode33;
+                        registerExt.UsrCreditAction = TWNCreditAction.VG;
                         break;
 
                     case TWGUIFormatCode.vATOutCode32:
