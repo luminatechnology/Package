@@ -133,7 +133,6 @@ namespace PX.Objects.AR
                     case TWGUIFormatCode.vATOutCode31:
                     case TWGUIFormatCode.vATOutCode35:
                         registerExt.UsrVATOutCode   = TWGUIFormatCode.vATOutCode33;
-                        registerExt.UsrCreditAction = TWNCreditAction.VG;
                         break;
 
                     case TWGUIFormatCode.vATOutCode32:
@@ -143,7 +142,7 @@ namespace PX.Objects.AR
 
                 registerExt.UsrCreditAction = TWNStringList.TWNCreditAction.VG;
                 registerExt.UsrB2CType      = TWNStringList.TWNB2CType.DEF;
-                registerExt.UsrCarrierID    = registerExt.UsrNPONbr = null;
+                registerExt.UsrNPONbr       = registerExt.UsrCarrierID = registerExt.UsrNPONbr = null;
             }
         }
 
