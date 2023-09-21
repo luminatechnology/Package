@@ -65,11 +65,14 @@
     <Compile Include="DAC_Extension\EMailAccount_Extension.cs" />
     <Compile Include="DAC_Extension\SOLineForDirectInvoiceExtensions.cs" />
     <Compile Include="DAC_Extension\SOOrderShipmentExtensions.cs" />
+    <Compile Include="DAC_Extension\SOOrderTypeExtensions.cs" />
     <Compile Include="DAC_Inheritance\LUMSOOrder.cs" />
     <Compile Include="Graph_Extensions\ARPaymentEntry.cs" />
+    <Compile Include="Graph_Extensions\ARReleaseProcess.cs" />
     <Compile Include="Graph_Extensions\ARSetupMaint.cs" />
     <Compile Include="Graph_Extensions\CustomerMaint.cs" />
     <Compile Include="Graph_Extensions\SOInvoiceEntryExtension.cs" />
+    <Compile Include="Graph_Extensions\SOOrderTypeMaint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
