@@ -1,6 +1,7 @@
 ﻿using System;
 using PX.Data;
 using eGUICustomizations.Descriptor;
+using PX.Objects.AR;
 
 namespace eGUICustomizations.DAC
 {
@@ -90,8 +91,25 @@ namespace eGUICustomizations.DAC
                                                typeof(TWNNPOTable.taxNbr))
         {
             Filterable = true;
-            DirtyRead = true;
+            DirtyRead  = true;
             DescriptionField = typeof(TWNNPOTable.descr);
+        }
+
+        /// <summary>
+        /// Override this event because the system will set a blank default value and trigger standard validation logic.
+        /// </summary>
+        public override void FieldVerifying(PXCache sender, PXFieldVerifyingEventArgs e)
+        {
+            var row = sender.Current as ARRegister;
+
+            if (row != null)
+            {
+                if (row.GetExtension<ARRegisterExt>().UsrB2CType == TWNStringList.TWNB2CType.NPO)
+                {
+                    object item = null;
+                    base.Verify(sender, e, ref item);
+                }
+            }
         }
     }
 }

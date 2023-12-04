@@ -8,7 +8,6 @@ using PX.Objects.CS;
 using eGUICustomizations.DAC;
 using eGUICustomizations.Descriptor;
 using eGUICustomizations.Graph_Release;
-using static eGUICustomizations.Descriptor.TWNStringList;
 
 namespace PX.Objects.AR
 {
@@ -142,7 +141,7 @@ namespace PX.Objects.AR
 
                 registerExt.UsrCreditAction = TWNStringList.TWNCreditAction.VG;
                 registerExt.UsrB2CType      = TWNStringList.TWNB2CType.DEF;
-                registerExt.UsrNPONbr       = registerExt.UsrCarrierID = registerExt.UsrNPONbr = null;
+                registerExt.UsrNPONbr       = registerExt.UsrCarrierID = null;
             }
         }
 
@@ -316,16 +315,6 @@ namespace PX.Objects.AR
                 throw;
             }
         }
-
-        //public static bool CheckAppointmentAmt(ARInvoice invoice)
-        //{
-        //    FSAppointment appointment = SelectFrom<FSAppointment>.InnerJoin<FSPostDoc>.On<FSPostDoc.appointmentID.IsEqual<FSAppointment.appointmentID>>
-        //                                                         .Where<FSPostDoc.postDocType.IsEqual<@P.AsString>
-        //                                                                .And<FSPostDoc.postRefNbr.IsEqual<@P.AsString>>>
-        //                                                         .View.Select(PXGraph.CreateInstance<ARInvoiceEntry>(), invoice.DocType, invoice.RefNbr);
-            
-        //    return appointment != null && appointment.CostTotal.Equals(decimal.Zero);
-        //}
         #endregion
     }
 }

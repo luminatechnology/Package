@@ -119,7 +119,7 @@ namespace PX.Objects.AR
         #region UsrNPONbr
         [PXDBString(10, IsUnicode = true)]
         [PXUIField(DisplayName = "NPO Nbr.", Visibility = PXUIVisibility.SelectorVisible, IsDirty = true)]
-        [NPONbrSelector]
+        [NPONbrSelector()]
         public virtual string UsrNPONbr { get; set; }
         public abstract class usrNPONbr : PX.Data.BQL.BqlString.Field<usrNPONbr> { }
         #endregion

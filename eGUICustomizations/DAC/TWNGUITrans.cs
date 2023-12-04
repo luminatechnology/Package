@@ -339,7 +339,7 @@ namespace eGUICustomizations.DAC
         #region NPONbr
         [PXDBString(10, IsUnicode = true)]
         [PXUIField(DisplayName = "NPO Nbr", Visibility = PXUIVisibility.SelectorVisible, IsDirty = true)]
-        [NPONbrSelector]
+        [NPONbrSelector()]
         public virtual string NPONbr { get; set; }
         public abstract class nPONbr : PX.Data.BQL.BqlString.Field<nPONbr> { }
         #endregion
